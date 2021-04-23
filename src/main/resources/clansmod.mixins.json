@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "club.mineplex.clans.asm.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "clansmod.refmap.json",
+  "mixins": [
+    "MixinContainer",
+    "MixinEntityPlayerSP",
+    "MixinGuiContainer",
+    "MixinSlotItemHandler"
+  ],
+  "minVersion": "0.6"
+}

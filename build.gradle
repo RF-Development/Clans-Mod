@@ -1,0 +1,119 @@
+buildscript {
+
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = "https://plugins.gradle.org/m2/" }
+        maven { url = 'https://repo.spongepowered.org/maven' }
+    }
+
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
+        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
+    }
+
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url = 'https://repo.spongepowered.org/maven/' }
+    maven { url = 'https://jitpack.io' }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'org.spongepowered.mixin'
+
+
+version = "1.0"
+group= "club.mineplex.clans"
+archivesBaseName = "ClansMod"
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+compileJava.options.encoding = 'UTF-8'
+
+mixin {
+    defaultObfuscationEnv searge
+    add sourceSets.main, "clansmod.refmap.json"
+}
+
+minecraft {
+    version = '1.8.9-11.15.1.2318-1.8.9'
+    mappings = "stable_22"
+    runDir = "run"
+}
+
+jar {
+    manifest {
+        attributes([
+                'FMLCorePlugin': 'club.mineplex.clans.asm.FMLLoadingPlugin',
+                'FMLCorePluginContainsMod': 'true',
+                "MixinConfigs": "clansmod.mixins.json",
+                'ForceLoadAsMod': 'true',
+                'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker'
+        ])
+    }
+
+    duplicatesStrategy = 'exclude'
+}
+
+dependencies {
+
+    annotationProcessor 'org.spongepowered:mixin:0.7.11-SNAPSHOT'
+    compile('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
+        exclude module: 'commons-io'
+        exclude module: 'guava'
+    }
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    shadow fileTree(dir: 'libs', include: ['*.jar'])
+
+}
+
+processResources {
+
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from (sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    from (sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+
+}
+
+sourceSets {
+    main { output.resourcesDir = output.classesDir }
+}
+
+shadowJar {
+    configurations = [project.configurations.compile]
+
+    exclude 'dummyThing'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.4'
+}
+
+
+reobf {
+    shadowJar {
+        mappingType = 'searge'
+    }
+}
+
+artifacts {
+    archives jar
+    archives shadowJar
+}

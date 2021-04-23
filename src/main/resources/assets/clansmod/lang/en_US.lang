@@ -1,0 +1,10 @@
+language.name=English
+language.region=US
+language.code=en_US
+
+clansmod.key.hud.desc=Open the HUD
+clansmod.key.category=Clans Mod
+clansmod.key.slotlock.desc=Lock a Slot
+clansmod.key.mount.desc=Spawn your last mount
+clansmod.key.cstuck.desc=Teleport to Wilderness
+clansmod.key.chome.desc=Telepor to Clan Home
