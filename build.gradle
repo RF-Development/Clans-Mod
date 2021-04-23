@@ -22,7 +22,7 @@ plugins {
 repositories {
     maven { url = 'https://repo.spongepowered.org/maven' }
     maven { url = "https://plugins.gradle.org/m2/" }
-    maven { url = 'http://files.minecraftforge.net/maven' }
+    maven { url = 'https://maven.minecraftforge.net/' }
     maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
     maven {
         name 'JitPack'
