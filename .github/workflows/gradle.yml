@@ -5,9 +5,11 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - '**'
   pull_request:
-    branches: [ master ]
+    branches:
+      - '**'
 
 jobs:
   build:
@@ -26,23 +28,5 @@ jobs:
       run: chmod +x gradlew
     - name: Setup Dev Workspace
       run: ./gradlew setupCIWorkspace
-    - name: Read mod name
-      id: read_mod_name
-      uses: christian-draeger/read-properties@1.0.1
-      with:
-        path: ${{ env.PROPERTIES_PATH }}
-        property: modName
-    - name: Read Minecraft version
-      id: read_mc_version
-      uses: christian-draeger/read-properties@1.0.1
-      with:
-        path: ${{ env.PROPERTIES_PATH }}
-        property: minecraftVersion
-    - name: Read mod version
-      id: read_mod_version
-      uses: christian-draeger/read-properties@1.0.1
-      with:
-        path: ${{ env.PROPERTIES_PATH }}
-        property: version
     - name: Build with Gradle
       run: ./gradlew build
