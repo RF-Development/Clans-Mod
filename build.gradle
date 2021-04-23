@@ -19,16 +19,19 @@ plugins {
     id 'java'
 }
 
-apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: 'org.spongepowered.mixin'
-
 repositories {
-    maven { url = 'https://repo.spongepowered.org/maven/' }
+    maven { url = 'https://repo.spongepowered.org/maven' }
+    maven { url = "https://plugins.gradle.org/m2/" }
+    maven { url = 'http://files.minecraftforge.net/maven' }
+    maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
     maven {
         name 'JitPack'
         url 'https://jitpack.io'
     }
 }
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'org.spongepowered.mixin'
 
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
