@@ -30,7 +30,6 @@ apply plugin: 'java'
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'org.spongepowered.mixin'
 
-
 version = "1.0"
 group= "club.mineplex.clans"
 archivesBaseName = "ClansMod"
@@ -46,8 +45,8 @@ mixin {
 
 minecraft {
     version = '1.8.9-11.15.1.2318-1.8.9'
-    mappings = "stable_22"
     runDir = "run"
+    mappings = "stable_22"
 }
 
 jar {
@@ -74,7 +73,6 @@ dependencies {
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
     shadow fileTree(dir: 'libs', include: ['*.jar'])
-
 }
 
 processResources {
