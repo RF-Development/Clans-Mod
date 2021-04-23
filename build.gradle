@@ -78,7 +78,6 @@ dependencies {
     }
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    shadow fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 processResources {
@@ -100,27 +99,3 @@ processResources {
 sourceSets {
     main { output.resourcesDir = output.classesDir }
 }
-
-shadowJar {
-    archiveName = tasks.jar.archiveName
-    classifier = ''
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    configurations = [project.configurations.compile]
-
-    exclude 'dummyThing'
-}
-
-test {
-    useJUnitPlatform()
-}
-
-task copyLicenses (type: Copy) {
-    from(project.projectDir) {
-        include('licenses/**')
-        include('LICENSE')
-    }
-    into(sourceSets.main.output.resourcesDir)
-}
-
-tasks.jar.dependsOn(tasks.copyLicenses)
-tasks.reobfJar.dependsOn(tasks.shadowJar)
