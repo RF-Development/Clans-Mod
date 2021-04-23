@@ -20,6 +20,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
     - name: Fetch unshallow
       run: |
         git fetch --prune --tags --unshallow
