@@ -33,14 +33,8 @@ repositories {
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'org.spongepowered.mixin'
 
-apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: 'java'
-
-apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'org.spongepowered.mixin'
-
-version =
-        group = "club.mineplex.clans"
+version = '1.0.0'
+group = "club.mineplex.clans"
 archivesBaseName = "ClansMod"
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -106,15 +100,15 @@ processResources {
 sourceSets {
     main { output.resourcesDir = output.classesDir }
 }
-//
-//shadowJar {
-//    archiveName = tasks.jar.archiveName
-//    classifier = ''
-//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-//    configurations = [project.configurations.compile]
-//
-//    exclude 'dummyThing'
-//}
+
+shadowJar {
+    archiveName = tasks.jar.archiveName
+    classifier = ''
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    configurations = [project.configurations.compile]
+
+    exclude 'dummyThing'
+}
 
 test {
     useJUnitPlatform()
