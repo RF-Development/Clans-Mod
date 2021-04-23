@@ -19,36 +19,6 @@ plugins {
     id 'java'
 }
 
-version = '1.0.0'
-group = "club.mineplex.clans"
-archivesBaseName = "ClansMod"
-
-apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: 'org.spongepowered.mixin'
-
-group = 'club.mineplex.clans'
-
-// The below line is for version checkers <= 1.4.2
-//version = "1.5.5"
-
-// Java plugin settings
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
-compileJava.options.encoding = 'UTF-8'
-
-sourceSets {
-    main {
-        output.resourcesDir = java.outputDir
-    }
-}
-
-minecraft {
-    version = "${project.minecraftVersion}-${project.forgeVersion}"
-    runDir = "run"
-
-    mappings = "${project.mappings}"
-}
-
 repositories {
     maven { url = 'https://repo.spongepowered.org/maven' }
     maven { url = "https://plugins.gradle.org/m2/" }
@@ -59,7 +29,54 @@ repositories {
         url 'https://jitpack.io'
     }
 }
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'org.spongepowered.mixin'
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'org.spongepowered.mixin'
+
+version =
+        group = "club.mineplex.clans"
+archivesBaseName = "ClansMod"
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+compileJava.options.encoding = 'UTF-8'
+
+mixin {
+    defaultObfuscationEnv searge
+    add sourceSets.main, "clansmod.refmap.json"
+}
+
+minecraft {
+    version = "${project.minecraftVersion}-${project.forgeVersion}"
+    runDir = "run"
+
+    mappings = "${project.mappings}"
+}
+
+jar {
+    manifest {
+        attributes([
+                'FMLCorePlugin': 'club.mineplex.clans.asm.FMLLoadingPlugin',
+                'FMLCorePluginContainsMod': 'true',
+                "MixinConfigs": "clansmod.mixins.json",
+                'ForceLoadAsMod': 'true',
+                'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker'
+        ])
+    }
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveName = project.modName + "-" + version + "-" + project.minecraftVersion + ".jar"
+    enabled = false
+}
+
 dependencies {
+
     annotationProcessor 'org.spongepowered:mixin:0.7.11-SNAPSHOT'
     compile('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
         exclude module: 'commons-io'
@@ -70,67 +87,45 @@ dependencies {
     shadow fileTree(dir: 'libs', include: ['*.jar'])
 }
 
-jar {
-    // Set the archive name here instead of in shadowJar because ForgeGradle needs it when re-obfuscating the jar.
-    archiveName = project.modName + "-" + version + "-for-MC-1.8.9.jar"
-    // Disable the default jar task and use shadowJar instead to shade the libraries into the jar.
-    enabled = false
-}
-
-shadowJar {
-    archiveName = tasks.jar.archiveName
-    classifier = ''
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-    manifest.attributes(
-            'FMLCorePlugin': 'club.mineplex.clans.asm.FMLLoadingPlugin',
-            'FMLCorePluginContainsMod': 'true',
-            "MixinConfigs": "clansmod.mixins.json",
-            'ForceLoadAsMod': 'true',
-            'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker'
-    )
-
-    exclude('dummyThing')
-    exclude('META-INF/maven/')
-    exclude('META-INF/nar/')
-    exclude('module-info.class')
-    exclude('META-INF/versions/')
-}
-
 processResources {
+
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
+    from (sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-
-        // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
 
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
+    from (sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+
 }
 
-task copyLicenses (type: Copy) {
-    from(project.projectDir) {
-        include('LICENSE')
-        include('NOTICE')
-        include('dependencyLicenses/**')
-    }
-    into(sourceSets.main.output.resourcesDir)
+sourceSets {
+    main { output.resourcesDir = output.classesDir }
 }
+//
+//shadowJar {
+//    archiveName = tasks.jar.archiveName
+//    classifier = ''
+//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//    configurations = [project.configurations.compile]
+//
+//    exclude 'dummyThing'
+//}
 
 test {
     useJUnitPlatform()
 }
 
-mixin {
-    defaultObfuscationEnv searge
-    add sourceSets.main, "clansmod.refmap.json"
+task copyLicenses (type: Copy) {
+    from(project.projectDir) {
+        include('licenses/**')
+        include('LICENSE')
+    }
+    into(sourceSets.main.output.resourcesDir)
 }
 
 tasks.jar.dependsOn(tasks.copyLicenses)
