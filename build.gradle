@@ -31,7 +31,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'org.spongepowered.mixin'
 
 version = "1.0"
-group= "club.mineplex.clans"
+group = "club.mineplex.clans"
 archivesBaseName = "ClansMod"
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -44,9 +44,10 @@ mixin {
 }
 
 minecraft {
-    version = '1.8.9-11.15.1.2318-1.8.9'
+    version = "${project.minecraftVersion}-${project.forgeVersion}"
     runDir = "run"
-    mappings = "stable_22"
+
+    mappings = "${project.mappings}"
 }
 
 jar {
@@ -61,6 +62,8 @@ jar {
     }
 
     duplicatesStrategy = 'exclude'
+    archiveName = project.modName + "-" + version + "-" + project.minecraftVersion + ".jar"
+    enabled = false
 }
 
 dependencies {
@@ -96,6 +99,9 @@ sourceSets {
 }
 
 shadowJar {
+    archiveName = tasks.jar.archiveName
+    classifier = ''
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     configurations = [project.configurations.compile]
 
     exclude 'dummyThing'
@@ -116,3 +122,15 @@ artifacts {
     archives jar
     archives shadowJar
 }
+
+task copyLicenses (type: Copy) {
+    from(project.projectDir) {
+        include('LICENSE')
+        include('NOTICE')
+        include('dependencyLicenses/**')
+    }
+    into(sourceSets.main.output.resourcesDir)
+}
+
+tasks.jar.dependsOn(tasks.copyLicenses)
+tasks.reobfJar.dependsOn(tasks.shadowJar)
