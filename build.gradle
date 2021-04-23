@@ -48,9 +48,8 @@ mixin {
 
 minecraft {
     version = "${project.minecraftVersion}-${project.forgeVersion}"
-    runDir = "run"
-
     mappings = "${project.mappings}"
+    runDir = "run"
 }
 
 jar {
