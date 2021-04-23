@@ -1,4 +1,4 @@
-<h1 align="center">Welcome to  👋</h1>
+<h1 align="center">Clans Mod👋</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
   <a href="#" target="_blank">
@@ -9,22 +9,33 @@
   </a>
 </p>
 
-> Cl Mineplex Clans Uutility mod.
+> Mineplex Clans utility mod, with a variety of features to enhance your gameplay.
 
-## Author
+> ✅ Approved by the Clans Insights team!
+
+## 🚀 Features
+
+* Toggleable Valuable Item Drop Prevention. (Gold Tokens)
+* Toggleable Legendary Item Drop Prevention. (Hyper Axe, Windblade, Giant's Broadsword, etc.)
+* Slot Locks, which prevent you from interacting with a slot in your inventory or dropping an item.
+* Discord Rich Presence with Multiplayer IP and Mineplex Lobbies support.
+* Mineplex Chat Message Filter, for G.W.E.N bulletin and redundant advanced player searches.
+* Clan Home and Stuck customizable keybinds.
+* Summon your last mount with a customizable keybind.
+
+## 🖊️ Author
 
 👤 **ReyBot**
 
 * Twitter: [@ReyEatsPie](https://twitter.com/ReyEatsPie)
-* Github: [@rey-dev](https://github.com/rey-dev)
+* GitHub: [@rey-dev](https://github.com/rey-dev)
 
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/Mineplex-Community/Clans-Mod/issues). 
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/Mineplex-Community/Clans-Mod/issues).
 
-## Show your support
+## ❤️ Show your support
 
-Give a ⭐️ if this project helped you!
+Give a ⭐️ if you liked the mod!
 
 ***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
