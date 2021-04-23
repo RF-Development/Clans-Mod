@@ -20,7 +20,6 @@ plugins {
 }
 
 repositories {
-
     maven { url = 'https://repo.spongepowered.org/maven' }
     maven { url = "https://plugins.gradle.org/m2/" }
     maven { url = 'http://files.minecraftforge.net/maven' }
@@ -29,7 +28,6 @@ repositories {
         name 'JitPack'
         url 'https://jitpack.io'
     }
-
 }
 
 apply plugin: 'com.github.johnrengelman.shadow'

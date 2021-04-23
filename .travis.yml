@@ -2,7 +2,3 @@ language: java
   
 before_install:
  – chmod +x gradlew
-
-script:
-- wget http://services.gradle.org/distributions/gradle-4.10.3-bin.zip
-- ./gradlew setupDecompWorkspace
