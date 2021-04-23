@@ -30,6 +30,8 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: '1.8'
+    - name: Setup Decomp Workspace
+      run: ./gradlew setupDecompWorkspace -Xmx6G -Xms6G
     - name: Build
       run: ./gradlew build --info --stacktrace
     - name: Verify
