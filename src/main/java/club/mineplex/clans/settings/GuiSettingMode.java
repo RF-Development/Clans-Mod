@@ -67,11 +67,10 @@ public final class GuiSettingMode extends SettingsCategory.GuiSetting {
 
     @Override
     public void load(final Object defaultV) {
-        final Configuration configuration = ClansMod.getInstance().getConfiguration();
 
-        configuration.load();
-        final String found = configuration.get(getCategory().getConfigID(), getConfigID(), defaultV.toString()).getString();
-        configuration.save();
+        ClansMod.getInstance().getConfiguration().load();
+        String found = ClansMod.getInstance().getConfiguration().get(getCategory().getConfigID(), getConfigID(), defaultV.toString()).getString();
+        ClansMod.getInstance().getConfiguration().save();
 
         currentMode = modes.stream()
                 .filter(mode -> mode.getName().equalsIgnoreCase(found))
