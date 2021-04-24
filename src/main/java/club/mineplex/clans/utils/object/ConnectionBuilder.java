@@ -10,6 +10,7 @@ import java.net.Proxy;
 import java.net.SocketException;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ConnectionBuilder {
@@ -26,10 +27,10 @@ public class ConnectionBuilder {
 
     public ConnectionBuilder(final String endpoint) {
 
-        this.data = "";
-        this.method = "GET";
+        data = "";
+        method = "GET";
         this.endpoint = endpoint;
-        this.headers = new HashMap<>();
+        headers = new HashMap<>();
 
     }
 
@@ -47,7 +48,7 @@ public class ConnectionBuilder {
 
     public void header(final String key, final String value) {
 
-        this.headers.put(key, value);
+        headers.put(key, value);
 
     }
 
@@ -128,11 +129,11 @@ public class ConnectionBuilder {
             e.printStackTrace();
         }
 
-        this.delay = Instant.now().toEpochMilli() - sentTime;
+        delay = Instant.now().toEpochMilli() - sentTime;
     }
 
     private HttpURLConnection ssl() throws IOException {
-        return UtilHTTP.ssl(this.endpoint, proxy);
+        return UtilHTTP.ssl(endpoint, proxy);
     }
 
     public String getResponseString() {
@@ -155,6 +156,20 @@ public class ConnectionBuilder {
 
     public Map<String, String> getSentHeaders() {
         return headers;
+    }
+
+    public void skipRedirects() {
+
+        ConnectionBuilder builder = this;
+        while (builder.getResponseCode() == 301) {
+            final Map<String, List<String>> headers = builder.getFinalConnection().getHeaderFields();
+            if (headers.containsKey("Location")) {
+                builder = new ConnectionBuilder(headers.get("Location").get(0));
+                builder.send();
+                finalConnection = builder.finalConnection;
+            }
+        }
+
     }
 
     private String formatGetURL(final String url, final String data) {

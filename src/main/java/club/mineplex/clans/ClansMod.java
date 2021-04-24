@@ -11,6 +11,7 @@ import club.mineplex.clans.modules.message_filter.MessageFilter;
 import club.mineplex.clans.modules.mineplex_server.MineplexServerHandler;
 import club.mineplex.clans.modules.slot_lock.SlotLock;
 import club.mineplex.clans.modules.status_indicators.IndicatorManager;
+import club.mineplex.clans.utils.UtilClient;
 import club.mineplex.clans.utils.UtilReference;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
@@ -26,16 +27,14 @@ import java.util.*;
 public class ClansMod {
     @Mod.Instance(value = UtilReference.MODID)
     private static ClansMod instance;
+    private final Map<Class<? extends ModModule>, ModModule> modules = new HashMap<>();
+    private final DiscordIntegration discord = new DiscordIntegration();
+    private ClientData clientData;
+    private Configuration configuration;
 
     public static ClansMod getInstance() {
         return instance;
     }
-
-    private final Map<Class<? extends ModModule>, ModModule> modules = new HashMap<>();
-    private final DiscordIntegration discord = new DiscordIntegration();
-
-    private ClientData clientData;
-    private Configuration configuration;
 
     private void registerEvents(final Object... events) {
         for (final Object event : events) {
@@ -61,6 +60,7 @@ public class ClansMod {
     @EventHandler
     public void init(final FMLInitializationEvent event) {
         clientData = new ClientData();
+        UtilClient.checkModVersion(clientData);
 
         discord.start();
 
@@ -93,7 +93,7 @@ public class ClansMod {
         return new ArrayList<>(modules.values());
     }
 
-    public <T extends ModModule> Optional<T> getModule(final Class<T> moduleClass) {
+    private <T extends ModModule> Optional<T> getModule(final Class<T> moduleClass) {
         return (Optional<T>) Optional.ofNullable(modules.get(moduleClass));
     }
 

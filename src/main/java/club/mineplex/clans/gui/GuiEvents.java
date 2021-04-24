@@ -1,5 +1,10 @@
 package club.mineplex.clans.gui;
 
+import club.mineplex.clans.ClansMod;
+import club.mineplex.clans.gui.repository.VersionBlockGUI;
+import club.mineplex.clans.utils.object.DelayedTask;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -18,9 +23,16 @@ public class GuiEvents {
                     20,
                     20
             );
-            button.allImage = false;
 
+            button.allImage = false;
             event.buttonList.add(button);
+
+            new DelayedTask(() -> {
+                if (!ClansMod.getInstance().getClientData().hasLatestRequiredVersion()) {
+                    Minecraft.getMinecraft().displayGuiScreen(new VersionBlockGUI());
+                }
+            }, 10);
+
         }
     }
 

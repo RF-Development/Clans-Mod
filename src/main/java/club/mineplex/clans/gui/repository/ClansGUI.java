@@ -1,5 +1,7 @@
 package club.mineplex.clans.gui.repository;
 
+import club.mineplex.clans.ClansMod;
+import club.mineplex.clans.ClientData;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
@@ -8,15 +10,18 @@ import java.io.IOException;
 
 public class ClansGUI extends GuiScreen {
 
-    protected GuiScreen previousScreen;
-    private boolean useBackButton = true;
+    protected final ClientData clientData = ClansMod.getInstance().getClientData();
+    private final GuiScreen previousScreen;
+    private final boolean useBackButton;
 
     public ClansGUI(final GuiScreen previous) {
-        this.previousScreen = previous;
+        previousScreen = previous;
+        useBackButton = true;
     }
 
-    public ClansGUI() {
-        this.useBackButton = false;
+    ClansGUI() {
+        previousScreen = null;
+        useBackButton = false;
     }
 
     @Override
@@ -24,11 +29,11 @@ public class ClansGUI extends GuiScreen {
 
         if (useBackButton) {
             final int buttonWidth = 200;
-            this.buttonList.add(
+            buttonList.add(
                     new GuiButton(
                             999,
                             24 / 3,
-                            this.height - 24,
+                            height - 24,
                             buttonWidth / 3,
                             20,
                             "Back"
@@ -44,14 +49,14 @@ public class ClansGUI extends GuiScreen {
         if (button.id == 9999) {
             if (previousScreen != null) {
 
-                this.mc.displayGuiScreen(previousScreen);
+                mc.displayGuiScreen(previousScreen);
 
             } else {
 
                 try {
-                    this.mc.thePlayer.closeScreen();
+                    mc.thePlayer.closeScreen();
                 } catch (final NullPointerException e) {
-                    this.mc.displayGuiScreen(new GuiMainMenu());
+                    mc.displayGuiScreen(new GuiMainMenu());
                 }
 
             }

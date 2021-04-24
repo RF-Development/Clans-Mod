@@ -1,6 +1,7 @@
 package club.mineplex.clans;
 
 import club.mineplex.clans.modules.mineplex_server.ServerType;
+import club.mineplex.clans.utils.UtilReference;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
 public class ClientData {
@@ -15,12 +16,9 @@ public class ClientData {
     private String multiplayerIP = DEFAULT_MULTIPLAYER_SERVER;
     private boolean onMultiplayer = false;
 
-    public void handleServerDisconnect(final FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
-        this.multiplayerIP = ClientData.DEFAULT_MULTIPLAYER_SERVER;
-        this.mineplexServer = ClientData.DEFAULT_MINEPLEX_SERVER;
-        this.onMultiplayer = false;
-        this.isMineplex = false;
-    }
+    private String latestRequiredVersion = UtilReference.VERSION;
+    private String latestVersion = UtilReference.VERSION;
+    private boolean hasLatestRequired = true;
 
     public static String getDefaultMineplexServer() {
         return DEFAULT_MINEPLEX_SERVER;
@@ -28,6 +26,13 @@ public class ClientData {
 
     public static String getDefaultMultiplayerServer() {
         return DEFAULT_MULTIPLAYER_SERVER;
+    }
+
+    public void handleServerDisconnect(final FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
+        multiplayerIP = ClientData.DEFAULT_MULTIPLAYER_SERVER;
+        mineplexServer = ClientData.DEFAULT_MINEPLEX_SERVER;
+        onMultiplayer = false;
+        isMineplex = false;
     }
 
     public ServerType getMineplexServerType() {
@@ -38,7 +43,7 @@ public class ClientData {
         this.mineplexServerType = mineplexServerType;
     }
 
-    public String getMineplexServer() {
+    String getMineplexServer() {
         return mineplexServer;
     }
 
@@ -54,7 +59,7 @@ public class ClientData {
         isMineplex = mineplex;
     }
 
-    public String getMultiplayerIP() {
+    String getMultiplayerIP() {
         return multiplayerIP;
     }
 
@@ -62,11 +67,40 @@ public class ClientData {
         this.multiplayerIP = multiplayerIP;
     }
 
-    public boolean isOnMultiplayer() {
+    boolean isOnMultiplayer() {
         return onMultiplayer;
     }
 
     public void setOnMultiplayer(final boolean onMultiplayer) {
         this.onMultiplayer = onMultiplayer;
     }
+
+    public String getLatestRequiredVersion() {
+        return latestRequiredVersion;
+    }
+
+    public void setLatestRequiredVersion(final String latestRequiredVersion) {
+        this.latestRequiredVersion = latestRequiredVersion;
+    }
+
+    public String getLatestVersion() {
+        return latestVersion;
+    }
+
+    public boolean isLatestVersion() {
+        return UtilReference.VERSION.equals(latestVersion);
+    }
+
+    public void setLatestVersion(final String latestVersion) {
+        this.latestVersion = latestVersion;
+    }
+
+    public boolean hasLatestRequiredVersion() {
+        return hasLatestRequired;
+    }
+
+    public void setHasLatestRequiredVersion(final boolean hasLatestRequired) {
+        this.hasLatestRequired = hasLatestRequired;
+    }
+
 }
