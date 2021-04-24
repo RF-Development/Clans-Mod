@@ -43,7 +43,7 @@ public abstract class MixinGuiContainer extends GuiScreen {
         if (keyCode == this.mc.gameSettings.keyBindDrop.getKeyCode() && this.theSlot != null) {
             final DropPrevention dropPrevention = ClansMod.getInstance().getModuleThrow(DropPrevention.class);
             final SlotLock slotLock = ClansMod.getInstance().getModuleThrow(SlotLock.class);
-            if (!dropPrevention.handleDrop(this.theSlot.getStack()) || slotLock.isSlotInteractable(theSlot)) {
+            if (!dropPrevention.handleDrop(this.theSlot.getStack()) || !slotLock.isSlotInteractable(theSlot)) {
                 callback.cancel();
             }
         }
@@ -118,9 +118,10 @@ public abstract class MixinGuiContainer extends GuiScreen {
                                 final CallbackInfo callback) {
 
         // Stops people from clicking into LOCKED SLOTS
-        if (this.getSlotAtPosition(mouseX, mouseY) != null
-                && !ClansMod.getInstance().getModuleThrow(SlotLock.class).isSlotInteractable(this.getSlotAtPosition(mouseX, mouseY))
-                && this.getSlotAtPosition(mouseX, mouseY).inventory instanceof InventoryPlayer) {
+        Slot slot = this.getSlotAtPosition(mouseX, mouseY);
+        if (slot != null
+                && !ClansMod.getInstance().getModuleThrow(SlotLock.class).isSlotInteractable(slot)
+                && slot.inventory instanceof InventoryPlayer) {
             callback.cancel();
         }
 

@@ -28,7 +28,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: "net.minecraftforge.gradle.forge"
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.0.0'
+version = project.version
 group = "club.mineplex.clans"
 archivesBaseName = "ClansMod"
 
@@ -42,9 +42,9 @@ mixin {
 }
 
 minecraft {
-    version = '1.8.9-11.15.1.2318-1.8.9'
+    version = project.forgeVersion
     runDir = 'run'
-    mappings = 'stable_22'
+    mappings = project.mappings
 }
 
 jar {
