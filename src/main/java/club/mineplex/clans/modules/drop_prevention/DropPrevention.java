@@ -1,7 +1,9 @@
 package club.mineplex.clans.modules.drop_prevention;
 
+import club.mineplex.clans.enums.Status;
 import club.mineplex.clans.modules.ModModule;
 import club.mineplex.clans.modules.mineplex_server.ServerType;
+import club.mineplex.clans.settings.SettingsHandler;
 import club.mineplex.clans.settings.repository.ClansSettings;
 import club.mineplex.clans.utils.UtilClient;
 import club.mineplex.clans.utils.UtilText;
@@ -10,7 +12,10 @@ import net.minecraft.item.ItemStack;
 public class DropPrevention extends ModModule {
 
     public DropPrevention() {
-        super("Drop Prevention");
+        super("Drop Prevention",
+                SettingsHandler.getInstance().getSettingThrow(ClansSettings.class).getLegendaryDropPrevention(),
+                SettingsHandler.getInstance().getSettingThrow(ClansSettings.class).getValuableDropPrevention()
+        );
     }
 
     public boolean handleDrop(final ItemStack itemStack) {
@@ -19,13 +24,13 @@ public class DropPrevention extends ModModule {
 
             final ClansSettings clansSettings = getSettingThrow(ClansSettings.class);
             if (itemStack.getItem().getUnlocalizedName().toLowerCase().contains("record")) {
-                if (!clansSettings.getLegendaryDropPrevention()) return true;
+                if (!clansSettings.getLegendaryDropPrevention().getCurrentMode().equals(Status.ENABLED)) return true;
                 cancelled = true;
             }
 
 
             if (itemStack.getItem().getUnlocalizedName().toLowerCase().contains("foot")) {
-                if (!clansSettings.getValuableDropPrevention()) return true;
+                if (!clansSettings.getValuableDropPrevention().getCurrentMode().equals(Status.ENABLED)) return true;
                 cancelled = true;
             }
 
@@ -43,9 +48,10 @@ public class DropPrevention extends ModModule {
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isModuleUsable() {
         final ClansSettings clansSettings = getSettingThrow(ClansSettings.class);
-        return (clansSettings.getLegendaryDropPrevention() || clansSettings.getValuableDropPrevention())
+        return (clansSettings.getLegendaryDropPrevention().getCurrentMode().equals(Status.ENABLED)
+                || clansSettings.getValuableDropPrevention().getCurrentMode().equals(Status.ENABLED))
                 && data.isMineplex()
                 && data.getMineplexServerType() == ServerType.CLANS;
     }

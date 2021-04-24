@@ -1,6 +1,7 @@
 package club.mineplex.clans.settings.repository;
 
 import club.mineplex.clans.enums.Status;
+import club.mineplex.clans.modules.message_filter.MessageFilter;
 import club.mineplex.clans.settings.GuiSettingMode;
 import club.mineplex.clans.settings.SettingsCategory;
 
@@ -18,8 +19,8 @@ public class MineplexSettings extends SettingsCategory {
         );
     }
 
-    public boolean getRedundantMessageFilter() {
-        return redundantMessageFilter.getModes().get(redundantMessageFilter.getCurrentMode()).equals(Status.ENABLED);
+    public GuiSettingMode getRedundantMessageFilter() {
+        return redundantMessageFilter;
     }
 
 }

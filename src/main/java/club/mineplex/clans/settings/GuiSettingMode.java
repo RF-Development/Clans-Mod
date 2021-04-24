@@ -2,6 +2,8 @@ package club.mineplex.clans.settings;
 
 import club.mineplex.clans.ClansMod;
 import club.mineplex.clans.enums.Status;
+import club.mineplex.clans.modules.ModModule;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class GuiSettingMode extends SettingsCategory.GuiSetting {
+public final class GuiSettingMode extends SettingsCategory.GuiSetting {
 
     private final List<Status> modes = new ArrayList<>();
     private int currentMode = 0;
@@ -37,18 +39,23 @@ public class GuiSettingMode extends SettingsCategory.GuiSetting {
         return new ArrayList<>(modes);
     }
 
-    public int getCurrentMode() {
-        return currentMode;
+    public Status getCurrentMode() {
+        return modes.get(currentMode);
     }
 
     @Override
     protected void doClick() {
-        currentMode = currentMode + 1 > this.modes.size() - 1 ? 0 : currentMode + 1;
+        currentMode = currentMode + 1 > modes.size() - 1 ? 0 : currentMode + 1;
     }
 
     @Override
     public String getLabel() {
-        return this.getName() + ": " + modes.get(currentMode);
+        String label = modes.get(currentMode).toString();
+        if (getAssignedModule().isPresent() && getAssignedModule().get().isModuleBlocked()) {
+            label = EnumChatFormatting.RED + "Blocked";
+        }
+
+        return getName() + ": " + label;
     }
 
     @Override
@@ -60,9 +67,11 @@ public class GuiSettingMode extends SettingsCategory.GuiSetting {
 
     @Override
     public void load(final Object defaultV) {
-        ClansMod.getInstance().getConfiguration().load();
-        final String found = ClansMod.getInstance().getConfiguration().get(getCategory().getConfigID(), getConfigID(), defaultV.toString()).getString();
-        ClansMod.getInstance().getConfiguration().save();
+        final Configuration configuration = ClansMod.getInstance().getConfiguration();
+
+        configuration.load();
+        final String found = configuration.get(getCategory().getConfigID(), getConfigID(), defaultV.toString()).getString();
+        configuration.save();
 
         currentMode = modes.stream()
                 .filter(mode -> mode.getName().equalsIgnoreCase(found))

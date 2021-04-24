@@ -1,5 +1,6 @@
 package club.mineplex.clans;
 
+import club.mineplex.clans.enums.Status;
 import club.mineplex.clans.modules.mineplex_server.ServerType;
 import club.mineplex.clans.settings.SettingsHandler;
 import club.mineplex.clans.settings.repository.DiscordSettings;
@@ -55,7 +56,7 @@ public class DiscordIntegration {
 
     private void update() {
         final DiscordSettings discordSettings = SettingsHandler.getInstance().getSettingThrow(DiscordSettings.class);
-        if (discordSettings.getDisplayRichStatus()) {
+        if (discordSettings.getDisplayRichStatus().getCurrentMode().equals(Status.ENABLED)) {
 
             if (!this.running) start();
 
@@ -64,11 +65,11 @@ public class DiscordIntegration {
 
             if (data.isOnMultiplayer()) {
 
-                if (!discordSettings.getDisplayServer()) {
+                if (!discordSettings.getDisplayServer().getCurrentMode().equals(Status.ENABLED)) {
                     server = "Multiplayer";
                 } else {
 
-                    if (data.isMineplex() && discordSettings.getDisplayMineplexServer()) {
+                    if (data.isMineplex() && discordSettings.getDisplayMineplexServer().getCurrentMode().equals(Status.ENABLED)) {
                         boolean isStaffServer = data.getMineplexServerType().equals(ServerType.STAFF);
                         server = "Mineplex " + (isStaffServer ? "Private Server" : data.getMineplexServer());
                     } else {

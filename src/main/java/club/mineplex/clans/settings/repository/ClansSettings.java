@@ -1,6 +1,9 @@
 package club.mineplex.clans.settings.repository;
 
 import club.mineplex.clans.enums.Status;
+import club.mineplex.clans.modules.drop_prevention.DropPrevention;
+import club.mineplex.clans.modules.enhanced_mounts.EnhancedMounts;
+import club.mineplex.clans.modules.slot_lock.SlotLock;
 import club.mineplex.clans.settings.GuiSettingMode;
 import club.mineplex.clans.settings.SettingsCategory;
 
@@ -27,20 +30,20 @@ public class ClansSettings extends SettingsCategory {
         );
     }
 
-    public boolean getLegendaryDropPrevention() {
-        return legendaryDropPrevention.getModes().get(legendaryDropPrevention.getCurrentMode()).equals(Status.ENABLED);
+    public GuiSettingMode getLegendaryDropPrevention() {
+        return legendaryDropPrevention;
     }
 
-    public boolean getValuableDropPrevention() {
-        return valuableDropPrevention.getModes().get(valuableDropPrevention.getCurrentMode()).equals(Status.ENABLED);
+    public GuiSettingMode getValuableDropPrevention() {
+        return valuableDropPrevention;
     }
 
-    public boolean getSlotLocks() {
-        return slotLocks.getModes().get(slotLocks.getCurrentMode()).equals(Status.ENABLED);
+    public GuiSettingMode getSlotLocks() {
+        return slotLocks;
     }
 
-    public boolean getEnhancedMounts() {
-        return enhancedMounts.getModes().get(enhancedMounts.getCurrentMode()).equals(Status.ENABLED);
+    public GuiSettingMode getEnhancedMounts() {
+        return enhancedMounts;
     }
 
 }

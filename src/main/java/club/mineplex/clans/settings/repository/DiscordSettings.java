@@ -1,6 +1,7 @@
 package club.mineplex.clans.settings.repository;
 
 import club.mineplex.clans.enums.Status;
+import club.mineplex.clans.modules.drop_prevention.DropPrevention;
 import club.mineplex.clans.settings.GuiSettingMode;
 import club.mineplex.clans.settings.SettingsCategory;
 
@@ -24,16 +25,16 @@ public class DiscordSettings extends SettingsCategory {
         );
     }
 
-    public boolean getDisplayRichStatus() {
-        return displayRichStatus.getModes().get(displayRichStatus.getCurrentMode()).equals(Status.ENABLED);
+    public GuiSettingMode getDisplayRichStatus() {
+        return displayRichStatus;
     }
 
-    public boolean getDisplayMineplexServer() {
-        return displayMineplexServer.getModes().get(displayMineplexServer.getCurrentMode()).equals(Status.ENABLED);
+    public GuiSettingMode getDisplayMineplexServer() {
+        return displayMineplexServer;
     }
 
-    public boolean getDisplayServer() {
-        return displayServer.getModes().get(displayServer.getCurrentMode()).equals(Status.ENABLED);
+    public GuiSettingMode getDisplayServer() {
+        return displayServer;
     }
 
 }

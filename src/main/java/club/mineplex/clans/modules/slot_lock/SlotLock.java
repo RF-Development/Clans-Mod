@@ -1,6 +1,7 @@
 package club.mineplex.clans.modules.slot_lock;
 
 import club.mineplex.clans.ClansMod;
+import club.mineplex.clans.enums.Status;
 import club.mineplex.clans.events.PreItemDropEvent;
 import club.mineplex.clans.modules.ModModule;
 import club.mineplex.clans.modules.mineplex_server.ServerType;
@@ -20,7 +21,7 @@ public class SlotLock extends ModModule {
     private int[] lockedSlots;
 
     public SlotLock() {
-        super("Slot Lock");
+        super("Slot Lock", SettingsHandler.getInstance().getSettingThrow(ClansSettings.class).getSlotLocks());
 
         final ClansSettings clansSettings = SettingsHandler.getInstance().getSettingThrow(ClansSettings.class);
         final Configuration configuration = ClansMod.getInstance().getConfiguration();
@@ -88,9 +89,9 @@ public class SlotLock extends ModModule {
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isModuleUsable() {
         final ClansSettings clansSettings = SettingsHandler.getInstance().getSettingThrow(ClansSettings.class);
-        return clansSettings.getSlotLocks()
+        return clansSettings.getSlotLocks().getCurrentMode().equals(Status.ENABLED)
                 && data.isMineplex()
                 && data.getMineplexServerType() == ServerType.CLANS;
     }

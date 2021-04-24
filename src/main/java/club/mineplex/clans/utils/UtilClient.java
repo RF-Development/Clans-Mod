@@ -7,6 +7,7 @@ import club.mineplex.clans.utils.object.DelayedTask;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.stream.MalformedJsonException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -69,4 +70,18 @@ public class UtilClient {
         }
     }
 
+    public static boolean isModFeatureAllowed(String moduleId) {
+        ConnectionBuilder builder = new ConnectionBuilder("http://api.mineplex.club/clansmod/features/verify?id=" + moduleId);
+        builder.send();
+        builder.skipRedirects();
+
+        try {
+            String state = new Gson().fromJson(builder.getResponseString(), JsonObject.class).get("state").getAsString();
+            return Boolean.parseBoolean(state);
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+            return true;
+        }
+
+    }
 }

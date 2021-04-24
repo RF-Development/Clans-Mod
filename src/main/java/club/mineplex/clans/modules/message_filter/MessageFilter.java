@@ -1,7 +1,10 @@
 package club.mineplex.clans.modules.message_filter;
 
+import club.mineplex.clans.enums.Status;
 import club.mineplex.clans.modules.ModModule;
 import club.mineplex.clans.modules.mineplex_server.ServerType;
+import club.mineplex.clans.settings.SettingsHandler;
+import club.mineplex.clans.settings.repository.ClansSettings;
 import club.mineplex.clans.settings.repository.MineplexSettings;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -26,7 +29,7 @@ public class MessageFilter extends ModModule {
 
 
     public MessageFilter() {
-        super("Message Filter");
+        super("Message Filter", SettingsHandler.getInstance().getSettingThrow(MineplexSettings.class).getRedundantMessageFilter());
     }
 
     private boolean isBlockedMessage(final IChatComponent message, final String[] messagesToFiler) {
@@ -58,8 +61,8 @@ public class MessageFilter extends ModModule {
     }
 
     @Override
-    public boolean isEnabled() {
-        return getSettingThrow(MineplexSettings.class).getRedundantMessageFilter();
+    public boolean isModuleUsable() {
+        return getSettingThrow(MineplexSettings.class).getRedundantMessageFilter().getCurrentMode().equals(Status.ENABLED);
     }
 
 }

@@ -1,8 +1,11 @@
 package club.mineplex.clans.settings;
 
+import club.mineplex.clans.modules.ModModule;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class SettingsCategory {
 
@@ -33,10 +36,19 @@ public abstract class SettingsCategory {
 
         private final String name;
         private final SettingsCategory category;
+        private ModModule assignedModule = null;
 
         protected GuiSetting(final String name, final SettingsCategory category) {
             this.name = name;
             this.category = category;
+        }
+
+        public void setAssignedModule(ModModule module) {
+            this.assignedModule = module;
+        }
+
+        public Optional<ModModule> getAssignedModule() {
+            return Optional.ofNullable(assignedModule);
         }
 
         public String getName() {

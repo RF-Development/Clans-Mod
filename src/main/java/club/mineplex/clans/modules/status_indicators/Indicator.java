@@ -43,7 +43,7 @@ public abstract class Indicator extends ModModule {
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isModuleUsable() {
         return isEnabled;
     }
 

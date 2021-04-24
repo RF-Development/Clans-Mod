@@ -1,8 +1,10 @@
 package club.mineplex.clans.modules.enhanced_mounts;
 
 import club.mineplex.clans.ClansMod;
+import club.mineplex.clans.enums.Status;
 import club.mineplex.clans.modules.ModModule;
 import club.mineplex.clans.modules.mineplex_server.ServerType;
+import club.mineplex.clans.settings.SettingsHandler;
 import club.mineplex.clans.settings.repository.ClansSettings;
 import club.mineplex.clans.utils.object.DelayedTask;
 import net.minecraft.client.Minecraft;
@@ -19,7 +21,7 @@ public class EnhancedMounts extends ModModule {
     private boolean queued = false;
 
     public EnhancedMounts() {
-        super("Enhanced Mounts");
+        super("Enhanced Mounts", SettingsHandler.getInstance().getSettingThrow(ClansSettings.class).getEnhancedMounts());
 
         final ClansSettings clansSettings = getSettingThrow(ClansSettings.class);
         selectedMount = ClansMod.getInstance().getConfiguration().get(clansSettings.getConfigID(), "selected-mount", -1).getInt();
@@ -76,8 +78,8 @@ public class EnhancedMounts extends ModModule {
     }
 
     @Override
-    public boolean isEnabled() {
-        return getSettingThrow(ClansSettings.class).getEnhancedMounts()
+    public boolean isModuleUsable() {
+        return getSettingThrow(ClansSettings.class).getEnhancedMounts().getCurrentMode().equals(Status.ENABLED)
                 && data.isMineplex()
                 && data.getMineplexServerType() == ServerType.CLANS;
     }

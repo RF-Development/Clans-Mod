@@ -62,8 +62,6 @@ public class ClansMod {
         clientData = new ClientData();
         UtilClient.checkModVersion(clientData);
 
-        discord.start();
-
         System.out.println("----------------");
         System.out.println();
         System.out.println(UtilReference.MODNAME + ": Made by ReyBot");
@@ -87,6 +85,8 @@ public class ClansMod {
                 new MessageFilter(),
                 new EnhancedMounts()
         );
+
+        discord.start();
     }
 
     public List<ModModule> getEnabledModules() {

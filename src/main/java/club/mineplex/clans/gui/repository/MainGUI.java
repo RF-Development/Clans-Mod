@@ -96,8 +96,12 @@ public class MainGUI extends ClansGUI {
             this.buttonList.add(button);
             this.dynamicSettings.add(button);
             categoryFunctions.put(button, guiButton -> {
-                setting.doChange();
                 button.displayString = setting.getLabel();
+
+                if (!setting.getAssignedModule().isPresent() || !setting.getAssignedModule().get().isModuleBlocked()) {
+                    setting.doChange();
+                }
+
                 return true;
             });
 
