@@ -74,4 +74,11 @@ public class GuiButtonCustom extends GuiButton {
         );
     }
 
+    public boolean isAllImage() {
+        return allImage;
+    }
+
+    public void setAllImage(boolean allImage) {
+        this.allImage = allImage;
+    }
 }

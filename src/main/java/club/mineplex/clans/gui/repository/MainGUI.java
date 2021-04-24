@@ -1,11 +1,15 @@
 package club.mineplex.clans.gui.repository;
 
 import club.mineplex.clans.ClansMod;
+import club.mineplex.clans.gui.GuiButtonCustom;
 import club.mineplex.clans.settings.SettingsCategory;
 import club.mineplex.clans.settings.SettingsHandler;
+import club.mineplex.clans.utils.UtilClient;
 import club.mineplex.clans.utils.UtilColor;
 import club.mineplex.clans.utils.UtilReference;
+import club.mineplex.clans.utils.UtilResource;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.ScaledResolution;
 
 import java.awt.*;
 import java.io.IOException;
@@ -66,6 +70,32 @@ public class MainGUI extends ClansGUI {
         }
 
         if (currentCategory != null) updateCategoryButtons(currentCategory);
+
+        ScaledResolution sr = new ScaledResolution(this.mc);
+        int scale = sr.getScaledHeight() / 15;
+        GuiButtonCustom discord = new GuiButtonCustom(
+                1001,
+                sidebarEnd / 2 - sidebarEnd / 4 - scale / 2,
+                this.height - 10 - scale,
+                scale,
+                scale,
+                UtilResource.getResource("textures/icons/discord.png"),
+                "Discord"
+        );
+        GuiButtonCustom github = new GuiButtonCustom(
+                1002,
+                sidebarEnd / 2 + sidebarEnd / 4 - scale / 2,
+                this.height - 10 - scale,
+                scale,
+                scale,
+                UtilResource.getResource("textures/icons/github.png"),
+                "GitHub"
+        );
+
+        discord.setAllImage(true);
+        github.setAllImage(true);
+        this.buttonList.add(discord);
+        this.buttonList.add(github);
     }
 
     private boolean updateCategoryButtons(final SettingsCategory newCategory) {
@@ -119,6 +149,14 @@ public class MainGUI extends ClansGUI {
 
         if (categoryFunctions.containsKey(button)) {
             categoryFunctions.get(button).apply(button);
+        }
+
+        if (button.id == 1002) {
+            UtilClient.openWebLink(UtilReference.GITHUB);
+        }
+
+        if (button.id == 1001) {
+            UtilClient.openWebLink(UtilReference.SUPPORT_DISCORD);
         }
 
     }
