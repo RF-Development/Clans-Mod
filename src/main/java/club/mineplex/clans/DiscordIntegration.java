@@ -67,10 +67,14 @@ public class DiscordIntegration {
                 if (!discordSettings.getDisplayServer()) {
                     server = "Multiplayer";
                 } else {
-                    if (data.isMineplex() && discordSettings.getDisplayMineplexServer())
-                        server = "Mineplex " + (data.getMineplexServerType().equals(ServerType.STAFF) ? "Private Server" : data.getMineplexServer());
-                    else
+
+                    if (data.isMineplex() && discordSettings.getDisplayMineplexServer()) {
+                        boolean isStaffServer = data.getMineplexServerType().equals(ServerType.STAFF);
+                        server = "Mineplex " + (isStaffServer ? "Private Server" : data.getMineplexServer());
+                    } else {
                         server = data.getMultiplayerIP();
+                    }
+
                 }
 
             } else {

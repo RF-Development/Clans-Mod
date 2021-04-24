@@ -13,7 +13,7 @@ public abstract class SettingsCategory {
         this.name = name;
     }
 
-    protected void addSettings(final GuiSetting... settings) {
+    protected final void addSettings(final GuiSetting... settings) {
         this.settings.addAll(Arrays.asList(settings));
     }
 

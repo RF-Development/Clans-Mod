@@ -29,7 +29,7 @@ public class DiscordSettings extends SettingsCategory {
     }
 
     public boolean getDisplayMineplexServer() {
-        return displayServer.getModes().get(displayServer.getCurrentMode()).equals(Status.ENABLED);
+        return displayMineplexServer.getModes().get(displayMineplexServer.getCurrentMode()).equals(Status.ENABLED);
     }
 
     public boolean getDisplayServer() {
