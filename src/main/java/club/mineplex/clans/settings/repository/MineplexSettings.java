@@ -13,11 +13,13 @@ public class MineplexSettings extends SettingsCategory {
 
         this.redundantMessageFilter = new GuiSettingMode("Message Filter", this, Status.ENABLED, Status.DISABLED);
 
-        this.settings.add(this.redundantMessageFilter);
+        addSettings(
+                redundantMessageFilter
+        );
     }
 
     public boolean getRedundantMessageFilter() {
-        return Status.valueOf(redundantMessageFilter.getModes().get(redundantMessageFilter.currentMode).toUpperCase()).equals(Status.ENABLED);
+        return redundantMessageFilter.getModes().get(redundantMessageFilter.getCurrentMode()).equals(Status.ENABLED);
     }
 
 }

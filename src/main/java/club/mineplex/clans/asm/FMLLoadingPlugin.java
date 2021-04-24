@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.Mixins;
 
 import java.util.Map;
 
-@Name (UtilReference.MODNAME)
-@MCVersion ("1.8.9")
+@Name(UtilReference.MODNAME)
+@MCVersion("1.8.9")
 public class FMLLoadingPlugin implements IFMLLoadingPlugin {
 
     public FMLLoadingPlugin() {
@@ -30,7 +30,8 @@ public class FMLLoadingPlugin implements IFMLLoadingPlugin {
         return null;
     }
 
-    public void injectData(Map<String, Object> map) {}
+    public void injectData(Map<String, Object> map) {
+    }
 
     public String getAccessTransformerClass() {
         return null;

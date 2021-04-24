@@ -7,15 +7,17 @@ public class ModInitializer {
     private static ModInitializer instance;
     private boolean isObfuscated = false;
 
+    public static ModInitializer getInstance() {
+        if (instance == null) {
+            instance = new ModInitializer();
+        }
+        return instance;
+    }
+
     public void init() {
 
         isObfuscated = !((boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment"));
 
-    }
-
-    public static ModInitializer getInstance() {
-        if (instance == null) instance = new ModInitializer();
-        return instance;
     }
 
     public boolean isObfuscated() {

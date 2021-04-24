@@ -4,33 +4,44 @@ import club.mineplex.clans.settings.repository.ClansSettings;
 import club.mineplex.clans.settings.repository.DiscordSettings;
 import club.mineplex.clans.settings.repository.MineplexSettings;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class SettingsHandler {
+    private static SettingsHandler instance;
 
-    private static final ArrayList<SettingsCategory> settings = new ArrayList<>();
-
-    private static final DiscordSettings discordSettings;
-    private static final ClansSettings clansSettings;
-    private static final MineplexSettings mineplexSettings;
-
-    static {
-        discordSettings = new DiscordSettings();
-        clansSettings = new ClansSettings();
-        mineplexSettings = new MineplexSettings();
-
-        settings.add(discordSettings);
-        settings.add(clansSettings);
-        settings.add(mineplexSettings);
+    public static SettingsHandler getInstance() {
+        if (instance == null) {
+            instance = new SettingsHandler();
+        }
+        return instance;
     }
 
-    public static ArrayList<SettingsCategory> getSettings() {
-        return new ArrayList<>(settings);
+    private final Map<Class<? extends SettingsCategory>, SettingsCategory> settings = new HashMap<>();
+
+    private SettingsHandler() {
+        registerSettingCategories(
+                new DiscordSettings(),
+                new ClansSettings(),
+                new MineplexSettings()
+        );
     }
 
-    public static <T> T getSettings(Class<T> categoryClass) {
-        for (SettingsCategory setting : getSettings()) if (setting.getClass() == categoryClass) return categoryClass.cast(setting);
-        throw new RuntimeException("Invalid settings class: " + categoryClass.getName());
+    private void registerSettingCategories(final SettingsCategory... categories) {
+        for (final SettingsCategory category : categories) {
+            settings.put(category.getClass(), category);
+        }
     }
 
+    public List<SettingsCategory> getSettings() {
+        return new ArrayList<>(settings.values());
+    }
+
+    public <T extends SettingsCategory> Optional<T> getSetting(final Class<T> categoryClass) {
+        return (Optional<T>) Optional.ofNullable(settings.get(categoryClass));
+    }
+
+    public <T extends SettingsCategory> T getSettingThrow(final Class<T> categoryClass) {
+        return getSetting(categoryClass)
+                .orElseThrow(() -> new RuntimeException("Invalid settings class: " + categoryClass.getName()));
+    }
 }

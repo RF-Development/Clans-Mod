@@ -2,126 +2,102 @@ package club.mineplex.clans.utils;
 
 import club.mineplex.clans.utils.object.ConnectionBuilder;
 import com.sun.net.ssl.HttpsURLConnection;
+import org.apache.commons.io.IOUtils;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class UtilHTTP {
+    private UtilHTTP() {
+    }
 
-    public static String agent = "Chrome";
-    public static String accept = "*/*";
+    private static final String ACCEPT = "*/*";
+    private static final String AGENT = "Chrome";
 
-    public static String mineplexScrape(String url) throws IOException {
+    public static String mineplexScrape(final String url) throws IOException {
 
-        ConnectionBuilder conn = new ConnectionBuilder(url).method("GET");
+        final ConnectionBuilder conn = new ConnectionBuilder(url).method("GET");
 
-        conn.header("Accept", UtilHTTP.accept);
+        conn.header("Accept", UtilHTTP.ACCEPT);
         conn.header("Origin", "https://mineplex.com/");
-        conn.header("User-Agent", UtilHTTP.agent);
+        conn.header("User-Agent", UtilHTTP.AGENT);
 
         conn.send();
 
         if (conn.getResponseCode() == 301) {
-            Map<String, List<String>> headers = conn.getFinalConnection().getHeaderFields();
-            if (headers.containsKey("Location")) return mineplexScrape(headers.get("Location").get(0));
+            final Map<String, List<String>> headers = conn.getFinalConnection().getHeaderFields();
+            if (headers.containsKey("Location")) {
+                return mineplexScrape(headers.get("Location").get(0));
+            }
         }
 
         return conn.getResponseString();
     }
 
-    public static int getURLCode(HttpURLConnection connection) {
+    public static int getURLCode(final HttpURLConnection connection) {
         try {
             return connection.getResponseCode();
-        } catch (IOException | NullPointerException e) {
+        } catch (final IOException | NullPointerException e) {
             return 400;
         }
     }
 
-    public static String getURLResponse(HttpURLConnection connection) {
-        if (connection == null) return "Error grabbing response!";
+    public static Optional<String> getURLResponse(final HttpURLConnection connection) {
+        if (connection == null) {
+            return Optional.empty();
+        }
 
         try {
+            final String response;
             if (connection.getResponseCode() > 199 && connection.getResponseCode() < 400) {
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-                String finalRes = "";
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                    finalRes += line;
-                }
-
-                reader.close();
-
-                return finalRes;
+                response = IOUtils.toString(connection.getInputStream(), StandardCharsets.UTF_8);
 
             } else {
-
-                BufferedReader reader;
-                try {
-                    reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-                } catch (NullPointerException x) {
-                    return "Error grabbing response";
-                }
-
-                StringBuilder finalRes = new StringBuilder();
-                String line;
-
-                try {
-                    while ((line = reader.readLine()) != null) finalRes.append(line);
-                } catch (IOException e1) {
-                    return "Error grabbing response";
-                }
-
-                try {
-                    reader.close();
-                } catch (IOException e1) {
-                    return "Error grabbing response";
-                }
-
-                return finalRes.toString();
-
+                response = IOUtils.toString(connection.getErrorStream(), StandardCharsets.UTF_8);
             }
-        } catch (IOException e) {
-            return "Error grabbing response";
+            return Optional.of(response);
+        } catch (final IOException e) {
+            return Optional.empty();
         }
     }
 
-    public static HttpURLConnection ssl(String url, Proxy proxy) throws IOException {
+    public static HttpURLConnection ssl(final String url, final Proxy proxy) throws IOException {
 
-        HttpURLConnection connection;
+        final HttpURLConnection connection;
         CookieHandler.setDefault(new CookieManager());
-        TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+        final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+            @Override
             public X509Certificate[] getAcceptedIssuers() {
                 return null;
             }
 
-            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            @Override
+            public void checkClientTrusted(final X509Certificate[] certs, final String authType) {
             }
 
-            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            @Override
+            public void checkServerTrusted(final X509Certificate[] certs, final String authType) {
             }
         }};
         SSLContext sc = null;
         try {
             sc = SSLContext.getInstance("SSL");
-        } catch (NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         try {
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
-        } catch (KeyManagementException e) {
+        } catch (final KeyManagementException e) {
             e.printStackTrace();
         }
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());

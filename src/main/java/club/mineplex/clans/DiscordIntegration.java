@@ -20,7 +20,7 @@ public class DiscordIntegration {
     public void start() {
         this.created = System.currentTimeMillis();
 
-        DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().setReadyEventHandler(discordUser -> {
+        final DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().setReadyEventHandler(discordUser -> {
             System.out.println("Loaded Discord Integration! [@" + discordUser.username + "#" + discordUser.discriminator + "]");
             update();
         }).build();
@@ -54,35 +54,35 @@ public class DiscordIntegration {
     }
 
     private void update() {
-
-        if (SettingsHandler.getSettings(DiscordSettings.class).getDisplayRichStatus()) {
+        final DiscordSettings discordSettings = SettingsHandler.getInstance().getSettingThrow(DiscordSettings.class);
+        if (discordSettings.getDisplayRichStatus()) {
 
             if (!this.running) start();
 
-            ClientData data = ClansMod.getInstance().getClientData();
-            String server;
+            final ClientData data = ClansMod.getInstance().getClientData();
+            final String server;
 
-            if (data.onMultiplayer)  {
+            if (data.isOnMultiplayer()) {
 
-                if (!SettingsHandler.getSettings(DiscordSettings.class).getDisplayServer()) {
+                if (!discordSettings.getDisplayServer()) {
                     server = "Multiplayer";
                 } else {
-                    if (data.isMineplex && SettingsHandler.getSettings(DiscordSettings.class).getDisplayMineplexServer())
-                        server = "Mineplex " + (data.mineplexServerType.equals(ServerType.STAFF) ? "Private Server" : data.mineplexServer);
+                    if (data.isMineplex() && discordSettings.getDisplayMineplexServer())
+                        server = "Mineplex " + (data.getMineplexServerType().equals(ServerType.STAFF) ? "Private Server" : data.getMineplexServer());
                     else
-                        server = data.multiplayerIP;
+                        server = data.getMultiplayerIP();
                 }
 
             } else {
                 server = "Main Menu";
             }
 
-            DiscordRichPresence.Builder b = new DiscordRichPresence.Builder(server);
-            b.setDetails(data.onMultiplayer ? "In-Game" : "");
-            b.setBigImage("mporange", "");
-            b.setStartTimestamps(created);
+            final DiscordRichPresence.Builder builder = new DiscordRichPresence.Builder(server);
+            builder.setDetails(data.isOnMultiplayer() ? "In-Game" : "");
+            builder.setBigImage("mporange", "");
+            builder.setStartTimestamps(created);
 
-            DiscordRPC.discordUpdatePresence(b.build());
+            DiscordRPC.discordUpdatePresence(builder.build());
 
         } else if (this.running) {
 

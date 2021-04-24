@@ -11,17 +11,19 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class MainGUI extends ClansGUI {
+    private static final int BUTTON_SEPARATION = 5;
+    private static final int BUTTON_HEIGHT = 20;
 
-    private final HashMap<GuiButton, Function<GuiButton, Boolean>> categoryFunctions = new HashMap<>();
-    private final ArrayList<GuiButton> dynamicSettings = new ArrayList<>();
+    private static final String TITLE = UtilReference.MODNAME + " v" + UtilReference.VERSION;
+    
+    private final Map<GuiButton, Function<GuiButton, Boolean>> categoryFunctions = new HashMap<>();
+    private final List<GuiButton> dynamicSettings = new ArrayList<>();
 
-    private final int buttonSeparation = 5;
-    private final int buttonHeight = 20;
-
-    private final String title = UtilReference.MODNAME + " v" + UtilReference.VERSION;
     private float titleY;
     private float titleX;
 
@@ -35,74 +37,71 @@ public class MainGUI extends ClansGUI {
         super.initGui();
 
         titleY = this.height / 18F;
-        titleX = this.width / 2F - ClansMod.getInstance().getMinecraft().fontRendererObj.getStringWidth(title) / 2F;
+        titleX = this.width / 2F - ClansMod.getInstance().getMinecraft().fontRendererObj.getStringWidth(TITLE) / 2F;
         headerEnd = (int) titleY * 2 + ClansMod.getInstance().getMinecraft().fontRendererObj.FONT_HEIGHT;
         sidebarEnd = this.width / 5;
 
         final int buttonWidth = sidebarEnd - 25;
         final int xIndex = sidebarEnd / 2 - buttonWidth / 2;
 
-        final int settingsSize = SettingsHandler.getSettings().size();
-        int yIndex = (this.height / 2 + headerEnd / 2) - (settingsSize * (buttonHeight) + (settingsSize-1) * buttonSeparation) / 2;
+        final int settingsSize = SettingsHandler.getInstance().getSettings().size();
+        int yIndex = (this.height / 2 + headerEnd / 2) - (settingsSize * (BUTTON_HEIGHT) + (settingsSize - 1) * BUTTON_SEPARATION) / 2;
         int id = 1;
 
-        for (SettingsCategory category : SettingsHandler.getSettings()) {
-            GuiButton button = new GuiButton(
+        for (final SettingsCategory category : SettingsHandler.getInstance().getSettings()) {
+            final GuiButton button = new GuiButton(
                     id,
                     xIndex,
                     yIndex,
                     buttonWidth,
-                    buttonHeight,
+                    BUTTON_HEIGHT,
                     fontRendererObj.trimStringToWidth(category.getName(), buttonWidth)
             );
 
             this.buttonList.add(button);
             this.categoryFunctions.put(button, guiButton -> updateCategoryButtons(category));
 
-            yIndex += buttonSeparation + buttonHeight;
+            yIndex += BUTTON_SEPARATION + BUTTON_HEIGHT;
             id++;
         }
 
         if (currentCategory != null) updateCategoryButtons(currentCategory);
     }
 
-    private boolean updateCategoryButtons(SettingsCategory newCategory) {
+    private boolean updateCategoryButtons(final SettingsCategory newCategory) {
 
         this.buttonList.removeAll(dynamicSettings);
         dynamicSettings.forEach(categoryFunctions::remove);
         dynamicSettings.clear();
 
         int id = 1000;
-        int settingsSize = newCategory.getSettings().size();
-        int buttonY = (this.height / 2 + headerEnd / 2) - (settingsSize * (buttonHeight) + (settingsSize-1) * buttonSeparation) / 2;
-        int buttonWidth = newCategory.getSettings()
+        final int settingsSize = newCategory.getSettings().size();
+        int buttonY = (this.height / 2 + headerEnd / 2) - (settingsSize * (BUTTON_HEIGHT) + (settingsSize - 1) * BUTTON_SEPARATION) / 2;
+        final int buttonWidth = newCategory.getSettings()
                 .stream()
                 .mapToInt(set -> fontRendererObj.getStringWidth(set.getLabel()) + 10)
                 .max()
                 .orElse(200);
 
-        for (SettingsCategory.GuiSetting setting : newCategory.getSettings()) {
-            GuiButton button = new GuiButton(
+        for (final SettingsCategory.GuiSetting setting : newCategory.getSettings()) {
+            final GuiButton button = new GuiButton(
                     id,
                     this.width / 2 + sidebarEnd / 2 - buttonWidth / 2,
                     buttonY,
                     buttonWidth,
-                    buttonHeight,
+                    BUTTON_HEIGHT,
                     setting.getLabel()
             );
 
             this.buttonList.add(button);
             this.dynamicSettings.add(button);
-            categoryFunctions.put(button, new Function<GuiButton, Boolean>() {
-                @Override
-                public Boolean apply(GuiButton guiButton) {
-                    setting.doChange();
-                    button.displayString = setting.getLabel();
-                    return true;
-                }
+            categoryFunctions.put(button, guiButton -> {
+                setting.doChange();
+                button.displayString = setting.getLabel();
+                return true;
             });
 
-            buttonY += buttonSeparation + buttonHeight;
+            buttonY += BUTTON_SEPARATION + BUTTON_HEIGHT;
             id++;
         }
 
@@ -111,7 +110,7 @@ public class MainGUI extends ClansGUI {
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
+    protected void actionPerformed(final GuiButton button) throws IOException {
         super.actionPerformed(button);
 
         if (categoryFunctions.containsKey(button)) {
@@ -121,14 +120,14 @@ public class MainGUI extends ClansGUI {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
         this.drawDefaultBackground();
-        String categoryTitle = currentCategory != null ? currentCategory.getName() + " Settings" : "";
-        int color = UtilColor.getChromaColor();
+        final String categoryTitle = currentCategory != null ? currentCategory.getName() + " Settings" : "";
+        final int color = UtilColor.getChromaColor();
 
         /* HEADER */
         drawRect(0, 0, this.width, headerEnd, new Color(255, 255, 255, 50).getRGB());
-        fontRendererObj.drawStringWithShadow(title, titleX, titleY, color);
+        fontRendererObj.drawStringWithShadow(TITLE, titleX, titleY, color);
 
         /* SIDEBAR */
         drawRect(0, headerEnd, sidebarEnd, this.height, new Color(50, 50, 50, 150).getRGB());

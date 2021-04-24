@@ -1,16 +1,18 @@
 [
-{
-  "modid": "clansmod",
-  "name": "Clans Mod",
-  "description": "Champions and Clans utilities mod.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authorList": ["ReyBot"],
-  "credits": "Fallen, for brainstorming feature ideas; Erica, for brainstorming feature ideas; Eclipse, for braistorming feature ideas",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
-}
+  {
+    "modid": "clansmod",
+    "name": "Clans Mod",
+    "description": "Champions and Clans utilities mod.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [
+      "ReyBot"
+    ],
+    "credits": "Fallen, for brainstorming feature ideas; Erica, for brainstorming feature ideas; Eclipse, for braistorming feature ideas",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
 ]

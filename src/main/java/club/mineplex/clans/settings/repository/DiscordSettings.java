@@ -17,21 +17,23 @@ public class DiscordSettings extends SettingsCategory {
         displayServer = new GuiSettingMode("Display Server", this, Status.ENABLED, Status.DISABLED);
         displayMineplexServer = new GuiSettingMode("Display Mineplex Server", this, Status.ENABLED, Status.DISABLED);
 
-        this.settings.add(displayRichStatus);
-        this.settings.add(displayServer);
-        this.settings.add(displayMineplexServer);
+        addSettings(
+                displayRichStatus,
+                displayServer,
+                displayMineplexServer
+        );
     }
 
     public boolean getDisplayRichStatus() {
-        return Status.valueOf(displayRichStatus.getModes().get(displayRichStatus.currentMode).toUpperCase()).equals(Status.ENABLED);
+        return displayRichStatus.getModes().get(displayRichStatus.getCurrentMode()).equals(Status.ENABLED);
     }
 
     public boolean getDisplayMineplexServer() {
-        return Status.valueOf(displayMineplexServer.getModes().get(displayMineplexServer.currentMode).toUpperCase()).equals(Status.ENABLED);
+        return displayServer.getModes().get(displayServer.getCurrentMode()).equals(Status.ENABLED);
     }
 
     public boolean getDisplayServer() {
-        return Status.valueOf(displayServer.getModes().get(displayServer.currentMode).toUpperCase()).equals(Status.ENABLED);
+        return displayServer.getModes().get(displayServer.getCurrentMode()).equals(Status.ENABLED);
     }
 
 }

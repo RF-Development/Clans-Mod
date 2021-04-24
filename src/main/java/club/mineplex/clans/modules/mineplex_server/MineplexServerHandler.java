@@ -3,6 +3,7 @@ package club.mineplex.clans.modules.mineplex_server;
 import club.mineplex.clans.ClansMod;
 import club.mineplex.clans.ClientData;
 import club.mineplex.clans.modules.ModModule;
+import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
@@ -19,8 +20,8 @@ import java.util.regex.Pattern;
 
 public class MineplexServerHandler extends ModModule {
 
-    private static final Pattern switchedServerRegex = Pattern.compile(".*> .* sent from ([A-z]+-[\\d]+) to ([A-z]+-[\\d]+)\\.");
-    private static final Pattern mineplexServerRegex = Pattern.compile("[A-z]+-[\\d]+");
+    private static final Pattern SWITCHED_SERVER_REGEX = Pattern.compile(".*> .* sent from ([A-z]+-[\\d]+) to ([A-z]+-[\\d]+)\\.");
+    private static final Pattern MINEPLEX_SERVER_REGEX = Pattern.compile("[A-z]+-[\\d]+");
 
     private boolean running = false;
 
@@ -31,43 +32,54 @@ public class MineplexServerHandler extends ModModule {
     }
 
     @SubscribeEvent
-    public void onChat(ClientChatReceivedEvent e) {
-        String message = e.message.getUnformattedText();
+    public void onChat(final ClientChatReceivedEvent e) {
+        final String message = e.message.getUnformattedText();
 
-        if (!message.matches(switchedServerRegex.pattern())) return;
+        if (!message.matches(SWITCHED_SERVER_REGEX.pattern())) {
+            return;
+        }
 
-        Matcher matcher = switchedServerRegex.matcher(message);
-        if (!matcher.find()) return;
-
-        update(matcher.group(2));
+        final Matcher matcher = SWITCHED_SERVER_REGEX.matcher(message);
+        if (matcher.find()) {
+            update(matcher.group(2));
+        }
     }
 
     public void start() {
-        if (this.running) return;
+        if (this.running) {
+            return;
+        }
 
         this.running = true;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                if (!running) this.cancel();
+                if (!running) {
+                    this.cancel();
+                }
 
-                IChatComponent component = getTabHeader();
-                String server = ClientData.defaultMineplexServer;
+                final Optional<IChatComponent> tabHeaderOpt = getTabHeader();
+                String server = ClientData.getDefaultMineplexServer();
 
                 try {
 
                     /* TABLIST */
-                    if (component != null)  {
-                        server = component.getUnformattedText().substring(component.getUnformattedText().lastIndexOf(" ") + 3);
+                    if (tabHeaderOpt.isPresent()) {
+                        final String tabHeaderText = tabHeaderOpt.get().getUnformattedText();
+                        server = tabHeaderText.substring(tabHeaderText.lastIndexOf(" ") + 3);
                     } else { /* SCOREBOARD */
-                        IChatComponent sb = getScoreboard();
-                        if (sb != null) server = sb.getUnformattedText();
+                        final Optional<IChatComponent> scoreboardOpt = getScoreboard();
+                        if (scoreboardOpt.isPresent()) {
+                            server = scoreboardOpt.get().getUnformattedText();
+                        }
                     }
 
-                } catch (StringIndexOutOfBoundsException e) {
+                } catch (final StringIndexOutOfBoundsException e) {
                     /* SCOREBOARD */
-                    IChatComponent sb = getScoreboard();
-                    if (sb != null) server = sb.getUnformattedText();
+                    final Optional<IChatComponent> scoreboardOpt = getScoreboard();
+                    if (scoreboardOpt.isPresent()) {
+                        server = scoreboardOpt.get().getUnformattedText();
+                    }
                 }
 
                 getScoreboard();
@@ -77,69 +89,89 @@ public class MineplexServerHandler extends ModModule {
         }, 0, 1000L);
     }
 
-    private void update(String server) {
-        data.mineplexServer = server;
-        String compare = server.toLowerCase();
+    private void update(final String server) {
+        data.setMineplexServer(server);
+        final String compare = server.toLowerCase();
 
         ServerType serverType;
-        if (compare.startsWith("lobby-")) serverType = ServerType.LOBBY;
-        else if (compare.startsWith("clanshub-")) serverType = ServerType.CLANSHUB;
-        else if (compare.startsWith("clans-")) serverType  = ServerType.CLANS;
-        else if (compare.startsWith("staff-")) serverType = ServerType.STAFF;
-        else serverType = ServerType.GAME;
+        if (compare.startsWith("lobby-")) {
+            serverType = ServerType.LOBBY;
+        } else if (compare.startsWith("clanshub-")) {
+            serverType = ServerType.CLANSHUB;
+        } else if (compare.startsWith("clans-")) {
+            serverType = ServerType.CLANS;
+        } else if (compare.startsWith("staff-")) {
+            serverType = ServerType.STAFF;
+        } else {
+            serverType = ServerType.GAME;
+        }
 
-        if (server.equalsIgnoreCase(ClientData.defaultMineplexServer)) serverType = ServerType.UNKNOWN;
-        data.mineplexServerType = serverType;
+        if (server.equalsIgnoreCase(ClientData.getDefaultMineplexServer())) {
+            serverType = ServerType.UNKNOWN;
+        }
+        data.setMineplexServerType(serverType);
     }
 
-    private IChatComponent getTabHeader() {
-        try {
-            if (ClansMod.getInstance().getMinecraft().ingameGUI == null) return null;
-            if (!ClansMod.getInstance().getClientData().isMineplex) return null;
+    private Optional<IChatComponent> getTabHeader() {
+        if (ClansMod.getInstance().getMinecraft().ingameGUI == null || !ClansMod.getInstance().getClientData().isMineplex()) {
+            return Optional.empty();
+        }
 
-            Field header = ClansMod.getInstance().getMinecraft().ingameGUI.getTabList().getClass().getDeclaredField("header");
-            header.setAccessible(true);
-            return (IChatComponent) header.get(ClansMod.getInstance().getMinecraft().ingameGUI.getTabList());
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            return null;
+        try {
+            final GuiPlayerTabOverlay tabList = ClansMod.getInstance().getMinecraft().ingameGUI.getTabList();
+            final Field headerField = tabList.getClass().getDeclaredField("header");
+            headerField.setAccessible(true);
+            final IChatComponent header = (IChatComponent) headerField.get(tabList);
+            return Optional.ofNullable(header);
+        } catch (final NoSuchFieldException | IllegalAccessException e) {
+            return Optional.empty();
         }
     }
 
-    private IChatComponent getScoreboard() {
+    private Optional<IChatComponent> getScoreboard() {
 
         try {
-            if (!ClansMod.getInstance().getClientData().isMineplex) return null;
+            if (!ClansMod.getInstance().getClientData().isMineplex()) {
+                return Optional.empty();
+            }
 
-            Scoreboard sb = ClansMod.getInstance().getMinecraft().theWorld.getScoreboard();
-            if (sb == null) return null;
+            final Scoreboard sb = ClansMod.getInstance().getMinecraft().theWorld.getScoreboard();
+            if (sb == null) {
+                return Optional.empty();
+            }
 
-            ScoreObjective obj = sb.getObjectiveInDisplaySlot(1);
-            Collection<Score> scores = sb.getSortedScores(obj);
-            List<String> names = new ArrayList<>();
+            final ScoreObjective obj = sb.getObjectiveInDisplaySlot(1);
+            final List<String> names = new ArrayList<>();
 
-            scores.forEach((s) ->  {
+            for (final Score score : sb.getSortedScores(obj)) {
                 String name = "";
-                ScorePlayerTeam team = sb.getPlayersTeam(s.getPlayerName());
-                if (team != null) name += team.getColorPrefix();
-                name += s.getPlayerName();
-                if (team != null) name += team.getColorSuffix();
+                final ScorePlayerTeam team = sb.getPlayersTeam(score.getPlayerName());
+                if (team != null) {
+                    name += team.getColorPrefix();
+                }
+                name += score.getPlayerName();
+                if (team != null) {
+                    name += team.getColorSuffix();
+                }
                 names.add(name);
-            });
+            }
 
-            for (String name  : names) {
-                Matcher matcher = mineplexServerRegex.matcher(name);
+            for (final String name : names) {
+                final Matcher matcher = MINEPLEX_SERVER_REGEX.matcher(name);
 
                 if (matcher.find()) {
-                    return new ChatComponentText(matcher.group());
+                    return Optional.of(
+                            new ChatComponentText(matcher.group())
+                    );
                 }
 
             }
 
-        } catch (Exception e) {
-            return null;
+        } catch (final Exception e) {
+            return Optional.empty();
         }
 
-        return null;
+        return Optional.empty();
     }
 
 }

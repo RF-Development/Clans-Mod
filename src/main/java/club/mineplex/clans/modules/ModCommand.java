@@ -7,11 +7,12 @@ import net.minecraft.command.ICommandSender;
 
 public abstract class ModCommand extends CommandBase {
 
-    private final String name, usage;
+    private final String name;
+    private final String usage;
     private boolean mineplexOnly = false;
 
-    public ModCommand(String name, String usage) {
-        this.name =  name;
+    protected ModCommand(final String name, final String usage) {
+        this.name = name;
         this.usage = usage;
     }
 
@@ -23,23 +24,23 @@ public abstract class ModCommand extends CommandBase {
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender) {
+    public String getCommandUsage(final ICommandSender sender) {
         return usage;
     }
 
     @Override
-    public boolean canCommandSenderUseCommand(ICommandSender sender) {
+    public boolean canCommandSenderUseCommand(final ICommandSender sender) {
         return true;
     }
 
-    protected void setMineplexOnly(boolean b) {
-        mineplexOnly = b;
+    protected void setMineplexOnly(final boolean mineplexOnly) {
+        this.mineplexOnly = mineplexOnly;
     }
 
     @Override
-    public void processCommand(ICommandSender sender, String[] args) {
+    public void processCommand(final ICommandSender sender, final String[] args) {
 
-        if (mineplexOnly && !ClansMod.getInstance().getClientData().isMineplex) {
+        if (mineplexOnly && !ClansMod.getInstance().getClientData().isMineplex()) {
             UtilText.sendPlayerMessageWithPrefix("Error", "This command only works in Mineplex!");
             return;
         }

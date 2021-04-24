@@ -3,6 +3,8 @@ package club.mineplex.clans.enums;
 import club.mineplex.clans.utils.UtilResource;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.Optional;
+
 public enum ModRole {
 
     CLANS_INSIGHTS("Clans Insights", UtilResource.getResource("textures/icons/tablist/ci.png")),
@@ -19,17 +21,21 @@ public enum ModRole {
         this.resourceLocation = resource;
     }
 
+    public static Optional<ModRole> of(String name) {
+        for (ModRole value : ModRole.values()) {
+            if (value.getName().equalsIgnoreCase(name)) {
+                return Optional.of(value);
+            }
+        }
+        return Optional.empty();
+    }
+
     public String getName() {
         return name;
     }
 
     public ResourceLocation getIcon() {
         return resourceLocation;
-    }
-
-    public static ModRole of(String name) {
-        for (ModRole value : ModRole.values()) if (value.getName().equalsIgnoreCase(name)) return value;
-        return null;
     }
 
 }
