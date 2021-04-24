@@ -6,8 +6,20 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class UtilResource {
+    private UtilResource() {
+    }
 
-    public static void drawPng(boolean blend, Minecraft mc, String resourcePath, int x, int y, float u, float v, int width, int height, float textureWidth, float textureHeight) {
+    public static void drawPng(final boolean blend,
+                               final Minecraft mc,
+                               final String resourcePath,
+                               final int x,
+                               final int y,
+                               final float u,
+                               final float v,
+                               final int width,
+                               final int height,
+                               final float textureWidth,
+                               final float textureHeight) {
         GlStateManager.pushMatrix();
         if (blend) GlStateManager.enableBlend();
         else GlStateManager.disableBlend();
@@ -20,8 +32,8 @@ public class UtilResource {
         GlStateManager.popMatrix();
     }
 
-    public static ResourceLocation getResource(String path) {
-        return new ResourceLocation("clansmod" , path);
+    public static ResourceLocation getResource(final String path) {
+        return new ResourceLocation("clansmod", path);
     }
 
 }

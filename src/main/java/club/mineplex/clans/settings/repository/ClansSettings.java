@@ -19,26 +19,28 @@ public class ClansSettings extends SettingsCategory {
         this.slotLocks = new GuiSettingMode("Inventory Slot Locks", this, Status.ENABLED, Status.DISABLED);
         this.enhancedMounts = new GuiSettingMode("Enhanced Mounts", this, Status.ENABLED, Status.DISABLED);
 
-        this.settings.add(this.valuableDropPrevention);
-        this.settings.add(this.legendaryDropPrevention);
-        this.settings.add(this.slotLocks);
-        this.settings.add(this.enhancedMounts);
+        addSettings(
+                this.valuableDropPrevention,
+                this.legendaryDropPrevention,
+                this.slotLocks,
+                this.enhancedMounts
+        );
     }
 
     public boolean getLegendaryDropPrevention() {
-        return Status.valueOf(legendaryDropPrevention.getModes().get(legendaryDropPrevention.currentMode).toUpperCase()).equals(Status.ENABLED);
+        return legendaryDropPrevention.getModes().get(legendaryDropPrevention.getCurrentMode()).equals(Status.ENABLED);
     }
 
     public boolean getValuableDropPrevention() {
-        return Status.valueOf(valuableDropPrevention.getModes().get(valuableDropPrevention.currentMode).toUpperCase()).equals(Status.ENABLED);
+        return valuableDropPrevention.getModes().get(valuableDropPrevention.getCurrentMode()).equals(Status.ENABLED);
     }
 
     public boolean getSlotLocks() {
-        return Status.valueOf(slotLocks.getModes().get(slotLocks.currentMode).toUpperCase()).equals(Status.ENABLED);
+        return slotLocks.getModes().get(slotLocks.getCurrentMode()).equals(Status.ENABLED);
     }
 
     public boolean getEnhancedMounts() {
-        return Status.valueOf(enhancedMounts.getModes().get(enhancedMounts.currentMode).toUpperCase()).equals(Status.ENABLED);
+        return enhancedMounts.getModes().get(enhancedMounts.getCurrentMode()).equals(Status.ENABLED);
     }
 
 }

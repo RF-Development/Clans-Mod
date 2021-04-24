@@ -14,19 +14,17 @@ import java.util.Map;
 
 public class ConnectionBuilder {
 
-    private final static String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36";
-
+    private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36";
+    private final Map<String, String> headers;
     private String endpoint;
     private String data;
     private String method;
-
     private Proxy proxy;
-
-    private final Map<String, String> headers;
     private HttpURLConnection finalConnection;
-    public long delay = 0, sentTime = 0;
+    private long delay = 0;
+    private long sentTime = 0;
 
-    public ConnectionBuilder(String endpoint) {
+    public ConnectionBuilder(final String endpoint) {
 
         this.data = "";
         this.method = "GET";
@@ -35,32 +33,32 @@ public class ConnectionBuilder {
 
     }
 
-    public void proxy(Proxy proxy) {
+    public void proxy(final Proxy proxy) {
 
         this.proxy = proxy;
 
     }
 
-    public void endpoint(String endpoint) {
+    public void endpoint(final String endpoint) {
 
         this.endpoint = endpoint;
 
     }
 
-    public void header(String key, String value) {
+    public void header(final String key, final String value) {
 
         this.headers.put(key, value);
 
     }
 
-    public ConnectionBuilder method(String method) {
+    public ConnectionBuilder method(final String method) {
 
         this.method = method;
         return this;
 
     }
 
-    public void data(String data) {
+    public void data(final String data) {
 
         this.data = data;
 
@@ -72,11 +70,11 @@ public class ConnectionBuilder {
 
         try {
 
-            HttpURLConnection connection = ssl();
+            final HttpURLConnection connection = ssl();
 
             connection.setRequestProperty("User-Agent", USER_AGENT);
 
-            for (Map.Entry<String, String> entry : headers.entrySet()) {
+            for (final Map.Entry<String, String> entry : headers.entrySet()) {
                 connection.setRequestProperty(entry.getKey(), entry.getValue());
             }
 
@@ -90,7 +88,7 @@ public class ConnectionBuilder {
                 connection.setRequestMethod("POST");
                 connection.connect();
 
-                DataOutputStream output = new DataOutputStream(connection.getOutputStream());
+                final DataOutputStream output = new DataOutputStream(connection.getOutputStream());
                 output.writeBytes(data);
                 output.flush();
                 output.close();
@@ -114,7 +112,7 @@ public class ConnectionBuilder {
 
                 connection.connect();
 
-                OutputStreamWriter osw = new OutputStreamWriter(connection.getOutputStream());
+                final OutputStreamWriter osw = new OutputStreamWriter(connection.getOutputStream());
                 osw.write(data);
                 osw.flush();
                 osw.close();
@@ -123,10 +121,10 @@ public class ConnectionBuilder {
             }
 
 
-        } catch (SocketException e) {
+        } catch (final SocketException e) {
             System.out.println();
             System.out.println("[SocketException] " + e.getMessage());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
 
@@ -138,10 +136,10 @@ public class ConnectionBuilder {
     }
 
     public String getResponseString() {
-        return UtilHTTP.getURLResponse(finalConnection);
+        return UtilHTTP.getURLResponse(finalConnection).orElse("Error grabbing response");
     }
 
-    public String getHeader(String name) {
+    public String getHeader(final String name) {
 
         return finalConnection.getHeaderField(name);
 
@@ -159,7 +157,7 @@ public class ConnectionBuilder {
         return headers;
     }
 
-    private String formatGetURL(String url, String data) {
+    private String formatGetURL(final String url, final String data) {
 
         String newURL = url;
 

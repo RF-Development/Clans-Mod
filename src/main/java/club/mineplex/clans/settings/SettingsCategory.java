@@ -1,15 +1,20 @@
 package club.mineplex.clans.settings;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class SettingsCategory {
 
-    protected final List<GuiSetting> settings = new ArrayList<>();
+    private final List<GuiSetting> settings = new ArrayList<>();
     private final String name;
 
-    public SettingsCategory(String name) {
+    protected SettingsCategory(final String name) {
         this.name = name;
+    }
+
+    protected void addSettings(final GuiSetting... settings) {
+        this.settings.addAll(Arrays.asList(settings));
     }
 
     public String getName() {
@@ -24,12 +29,12 @@ public abstract class SettingsCategory {
         return new ArrayList<>(settings);
     }
 
-    public static abstract class GuiSetting {
+    public abstract static class GuiSetting {
 
         private final String name;
         private final SettingsCategory category;
 
-        public GuiSetting(String name, SettingsCategory category) {
+        protected GuiSetting(final String name, final SettingsCategory category) {
             this.name = name;
             this.category = category;
         }

@@ -2,19 +2,20 @@ package club.mineplex.clans.cache;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
-public abstract class ModCache {
+public abstract class ModCache<T> {
 
-    public ModCache() {
+    protected ModCache() {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 updateCache();
             }
-        }, 0, 30L * 60L * 1000L);
+        }, 0, TimeUnit.MINUTES.toMillis(30));
     }
 
-    public abstract <T> Object get();
+    public abstract T get();
 
     public abstract void updateCache();
 

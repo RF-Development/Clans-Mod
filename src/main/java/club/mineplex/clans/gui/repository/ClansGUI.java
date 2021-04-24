@@ -11,7 +11,7 @@ public class ClansGUI extends GuiScreen {
     protected GuiScreen previousScreen;
     private boolean useBackButton = true;
 
-    public ClansGUI(GuiScreen previous) {
+    public ClansGUI(final GuiScreen previous) {
         this.previousScreen = previous;
     }
 
@@ -23,15 +23,24 @@ public class ClansGUI extends GuiScreen {
     public void initGui() {
 
         if (useBackButton) {
-            int buttonWidth = 200;
-            this.buttonList.add(new GuiButton(999, 24 / 3, this.height - 24, buttonWidth / 3, 20, "Back"));
+            final int buttonWidth = 200;
+            this.buttonList.add(
+                    new GuiButton(
+                            999,
+                            24 / 3,
+                            this.height - 24,
+                            buttonWidth / 3,
+                            20,
+                            "Back"
+                    )
+            );
         }
 
         super.initGui();
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
+    protected void actionPerformed(final GuiButton button) throws IOException {
         if (button.id == 9999) {
             if (previousScreen != null) {
 
@@ -41,17 +50,11 @@ public class ClansGUI extends GuiScreen {
 
                 try {
                     this.mc.thePlayer.closeScreen();
-                } catch (NullPointerException e) {
+                } catch (final NullPointerException e) {
                     this.mc.displayGuiScreen(new GuiMainMenu());
                 }
 
             }
         }
     }
-
-    @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
-    }
-
 }

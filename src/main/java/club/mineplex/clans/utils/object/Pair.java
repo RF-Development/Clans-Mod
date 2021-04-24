@@ -1,11 +1,11 @@
 package club.mineplex.clans.utils.object;
 
-public class ObjectPair<K, V> {
+public class Pair<K, V> {
 
-    K key;
-    V value;
+    private final K key;
+    private final V value;
 
-    public ObjectPair(K key, V value) {
+    public Pair(K key, V value) {
         this.key = key;
         this.value = value;
     }

@@ -8,10 +8,16 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class GuiEvents {
 
     @SubscribeEvent
-    public void guiEvent(GuiScreenEvent.InitGuiEvent.Post event) {
-        GuiScreen gui = event.gui;
+    public void guiEvent(final GuiScreenEvent.InitGuiEvent.Post event) {
+        final GuiScreen gui = event.gui;
         if (gui instanceof GuiMainMenu) {
-            GuiButtonMain button = new GuiButtonMain(20, gui.width / 2 + 104, gui.height / 4 + 48 + 72 + 12, 20, 20);
+            final GuiButtonMain button = new GuiButtonMain(
+                    20,
+                    gui.width / 2 + 104,
+                    gui.height / 4 + 48 + 72 + 12,
+                    20,
+                    20
+            );
             button.allImage = false;
 
             event.buttonList.add(button);

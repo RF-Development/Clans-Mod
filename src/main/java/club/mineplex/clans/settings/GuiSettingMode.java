@@ -1,27 +1,44 @@
 package club.mineplex.clans.settings;
 
 import club.mineplex.clans.ClansMod;
+import club.mineplex.clans.enums.Status;
+import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class GuiSettingMode extends SettingsCategory.GuiSetting {
 
-    private final List<String> modes = new ArrayList<>();
-    public int currentMode = 0;
+    private final List<Status> modes = new ArrayList<>();
+    private int currentMode = 0;
 
-    public GuiSettingMode(String label, SettingsCategory category, Object mode1, Object mode2, Object... modes) {
+    public GuiSettingMode(final String label,
+                          final SettingsCategory category,
+                          final Status mode1,
+                          final Status mode2,
+                          final Status... modes) {
         super(label, category);
 
-        this.modes.addAll(Arrays.asList(mode1.toString(), mode2.toString()));
-        if (modes != null) Arrays.stream(modes).forEach(o -> this.modes.add(o.toString()));
+        Collections.addAll(
+                this.modes,
+                mode1,
+                mode2
+        );
+        if (modes != null) {
+            this.modes.addAll(Arrays.asList(modes));
+        }
 
         load(mode1);
     }
 
-    public List<String> getModes() {
+    public List<Status> getModes() {
         return new ArrayList<>(modes);
+    }
+
+    public int getCurrentMode() {
+        return currentMode;
     }
 
     @Override
@@ -36,17 +53,22 @@ public class GuiSettingMode extends SettingsCategory.GuiSetting {
 
     @Override
     public void save() {
-        ClansMod.getInstance().getConfiguration().getCategory(getCategory().getConfigID()).get(getConfigID()).set(modes.get(currentMode));
-        ClansMod.getInstance().getConfiguration().save();
+        final Configuration configuration = ClansMod.getInstance().getConfiguration();
+        configuration.getCategory(getCategory().getConfigID()).get(getConfigID()).set(modes.get(currentMode).getName());
+        configuration.save();
     }
 
     @Override
-    public void load(Object defaultV) {
+    public void load(final Object defaultV) {
         ClansMod.getInstance().getConfiguration().load();
-        String found = ClansMod.getInstance().getConfiguration().get(getCategory().getConfigID(), getConfigID(), defaultV.toString()).getString();
+        final String found = ClansMod.getInstance().getConfiguration().get(getCategory().getConfigID(), getConfigID(), defaultV.toString()).getString();
         ClansMod.getInstance().getConfiguration().save();
 
-        currentMode = modes.stream().filter(s -> s.equalsIgnoreCase(found)).findAny().map(modes::indexOf).orElse(0);
+        currentMode = modes.stream()
+                .filter(mode -> mode.getName().equalsIgnoreCase(found))
+                .findAny()
+                .map(modes::indexOf)
+                .orElse(0);
     }
 
 }

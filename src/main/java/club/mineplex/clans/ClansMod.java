@@ -1,10 +1,8 @@
 package club.mineplex.clans;
 
-import club.mineplex.clans.asm.FMLLoadingPlugin;
-import club.mineplex.clans.clansmod.KeyBindingManager;
 import club.mineplex.clans.clansmod.ModInitializer;
+import club.mineplex.clans.clansmod.keybind.KeyBindingManager;
 import club.mineplex.clans.gui.GuiEvents;
-import club.mineplex.clans.listeners.ListenerKeybind;
 import club.mineplex.clans.listeners.ListenerServerConnection;
 import club.mineplex.clans.modules.ModModule;
 import club.mineplex.clans.modules.drop_prevention.DropPrevention;
@@ -17,41 +15,51 @@ import club.mineplex.clans.utils.UtilReference;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 @Mod(modid = UtilReference.MODID, version = UtilReference.VERSION, name = UtilReference.MODNAME)
 public class ClansMod {
-
-    final ArrayList<ModModule> enabledModules = new ArrayList<>();
-    final DiscordIntegration discord = new DiscordIntegration();
-
+    @Mod.Instance(value = UtilReference.MODID)
     private static ClansMod instance;
 
-    private Minecraft mc = Minecraft.getMinecraft();
+    public static ClansMod getInstance() {
+        return instance;
+    }
+
+    private final Map<Class<? extends ModModule>, ModModule> modules = new HashMap<>();
+    private final DiscordIntegration discord = new DiscordIntegration();
+
     private ClientData clientData;
     private Configuration configuration;
 
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        configuration = new Configuration(event.getSuggestedConfigurationFile());
-        configuration.load();
+    private void registerEvents(final Object... events) {
+        for (final Object event : events) {
+            MinecraftForge.EVENT_BUS.register(event);
+        }
+    }
 
-        KeyBindingManager.setup();
+    private void registerModules(final ModModule... modules) {
+        for (final ModModule module : modules) {
+            this.modules.put(module.getClass(), module);
+            MinecraftForge.EVENT_BUS.register(module);
+        }
     }
 
     @EventHandler
-    public void init(FMLInitializationEvent event) {
-        instance = this;
+    public void preInit(final FMLPreInitializationEvent event) {
+        configuration = new Configuration(event.getSuggestedConfigurationFile());
+        configuration.load();
+
+        KeyBindingManager.getInstance().setup();
+    }
+
+    @EventHandler
+    public void init(final FMLInitializationEvent event) {
         clientData = new ClientData();
 
         discord.start();
@@ -62,44 +70,40 @@ public class ClansMod {
         System.out.println();
         System.out.println("----------------");
 
-        new FMLLoadingPlugin();
-
-        FMLCommonHandler.instance().bus().register(this);
-        MinecraftForge.EVENT_BUS.register(new GuiEvents());
-        MinecraftForge.EVENT_BUS.register(new ListenerServerConnection());
-        MinecraftForge.EVENT_BUS.register(new IndicatorManager());
-        MinecraftForge.EVENT_BUS.register(new ListenerKeybind());
+        registerEvents(
+                this,
+                new GuiEvents(),
+                new ListenerServerConnection(),
+                new IndicatorManager()
+        );
 
         ModInitializer.getInstance().init();
-        enableModules();
-    }
 
-    @EventHandler
-    @SideOnly(Side.CLIENT)
-    public void postInit(FMLPostInitializationEvent event) {
-        this.mc = Minecraft.getMinecraft();
-    }
-
-    private void enableModules() {
-        enabledModules.addAll(Arrays.asList(
+        // Enable modules
+        registerModules(
                 new MineplexServerHandler(),
                 new DropPrevention(),
                 new SlotLock(),
                 new MessageFilter(),
                 new EnhancedMounts()
-        ));
+        );
     }
 
-    public ArrayList<ModModule> getEnabledModules() {
-        return enabledModules;
+    public List<ModModule> getEnabledModules() {
+        return new ArrayList<>(modules.values());
     }
 
-    public static ClansMod getInstance() {
-        return instance;
+    public <T extends ModModule> Optional<T> getModule(final Class<T> moduleClass) {
+        return (Optional<T>) Optional.ofNullable(modules.get(moduleClass));
+    }
+
+    public <T extends ModModule> T getModuleThrow(final Class<T> moduleClass) {
+        return getModule(moduleClass)
+                .orElseThrow(() -> new RuntimeException("Invalid module class: " + moduleClass.getName()));
     }
 
     public Minecraft getMinecraft() {
-        return mc;
+        return Minecraft.getMinecraft();
     }
 
     public ClientData getClientData() {

@@ -2,44 +2,64 @@ package club.mineplex.clans.modules.message_filter;
 
 import club.mineplex.clans.modules.ModModule;
 import club.mineplex.clans.modules.mineplex_server.ServerType;
-import club.mineplex.clans.settings.SettingsHandler;
 import club.mineplex.clans.settings.repository.MineplexSettings;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class MessageFilter extends ModModule {
+    private static final String[] CLANS_FILTER_MESSAGE_STARTS = {
+            "Clans> You cannot harm",
+            "Clan Search> Too many players matched. Try a more specific search",
+            "Clan Search> No clans matched. Try a more specific search",
+            "Clan Search> No players matched. Try a more specific search"
+    };
+
+    private static final String[] FILTER_MESSAGE_STARTS = {
+            "-=[GWEN Anticheat Bulletin]=-",
+            "Over the last week, ",
+            "were detected as cheaters and",
+            "were removed from the network!",
+            "This does not include the number",
+            "of accounts in the next banwave."
+    };
+
 
     public MessageFilter() {
         super("Message Filter");
     }
 
-    @SubscribeEvent
-    public void onMessageReceived(ClientChatReceivedEvent event) {
-        if (!isEnabled() || !data.isMineplex) return;
-        boolean cancel = false;
+    private boolean isBlockedMessage(final IChatComponent message, final String[] messagesToFiler) {
+        for (final String filteredStart : messagesToFiler) {
+            if (message.getUnformattedText().startsWith(filteredStart)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-        // Clans
-        if (data.mineplexServerType == ServerType.CLANS) {
-            if (event.message.getUnformattedText().startsWith("Clans> You cannot harm")) cancel = true;
-            if (event.message.getUnformattedText().startsWith("Clan Search> Too many players matched. Try a more specific search")) cancel = true;
-            if (event.message.getUnformattedText().startsWith("Clan Search> No clans matched. Try a more specific search")) cancel = true;
-            if (event.message.getUnformattedText().startsWith("Clan Search> No players matched. Try a more specific search")) cancel = true;
+    @SubscribeEvent
+    public void onMessageReceived(final ClientChatReceivedEvent event) {
+        if (!isEnabled() || !data.isMineplex()) {
+            return;
         }
 
-        // GWEN
-        if (event.message.getUnformattedText().startsWith("-=[GWEN Anticheat Bulletin]=-")) cancel = true;
-        if (event.message.getUnformattedText().startsWith("Over the last week, ")) cancel = true;
-        if (event.message.getUnformattedText().startsWith("were detected as cheaters and")) cancel = true;
-        if (event.message.getUnformattedText().startsWith("were removed from the network!")) cancel = true;
-        if (event.message.getUnformattedText().startsWith("This does not include the number")) cancel = true;
-        if (event.message.getUnformattedText().startsWith("of accounts in the next banwave.")) cancel = true;
+        // Clans
+        if (data.getMineplexServerType() == ServerType.CLANS && isBlockedMessage(event.message, CLANS_FILTER_MESSAGE_STARTS)) {
+            event.setCanceled(true);
+            return;
+        }
 
-        if (cancel) event.setCanceled(true);
+        // Global
+        if (isBlockedMessage(event.message, FILTER_MESSAGE_STARTS)) {
+            event.setCanceled(true);
+            return;
+        }
     }
 
     @Override
     public boolean isEnabled() {
-        return SettingsHandler.getSettings(MineplexSettings.class).getRedundantMessageFilter();
+        return getSettingThrow(MineplexSettings.class).getRedundantMessageFilter();
     }
 
 }

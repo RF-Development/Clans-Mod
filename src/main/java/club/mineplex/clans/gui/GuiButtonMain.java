@@ -8,17 +8,17 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class GuiButtonMain extends GuiButtonCustom {
 
-    public GuiButtonMain(int buttonId, int x, int y, int widthIn, int heightIn) {
+    public GuiButtonMain(final int buttonId, final int x, final int y, final int widthIn, final int heightIn) {
         super(buttonId, x, y, widthIn, heightIn, GuiButtonCustom.customGUITextures, "");
 
         textureHeight = heightIn;
         textureWidth = widthIn;
-        u = 0;
-        v = 0;
+        horizontal = 0;
+        vertical = 0;
     }
 
     @SubscribeEvent
-    public void onClick(GuiScreenEvent.ActionPerformedEvent event) {
+    public void onClick(final GuiScreenEvent.ActionPerformedEvent event) {
         if (event.gui instanceof GuiMainMenu && (event.button.id == this.id)) {
             Minecraft.getMinecraft().displayGuiScreen(new MainGUI());
         }

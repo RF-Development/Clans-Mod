@@ -1,77 +1,72 @@
 package club.mineplex.clans;
 
-import club.mineplex.clans.chat_listeners.ChatListener;
 import club.mineplex.clans.modules.mineplex_server.ServerType;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
-import java.util.Arrays;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
 public class ClientData {
 
-    public static final String defaultMineplexServer = "Unknown Server";
-    public static final String defaultMultiplayerServer = "Unknown Server";
+    private static final String DEFAULT_MINEPLEX_SERVER = "Unknown Server";
+    private static final String DEFAULT_MULTIPLAYER_SERVER = "Unknown Server";
 
-    public ServerType mineplexServerType = ServerType.UNKNOWN;
-    public String mineplexServer = defaultMineplexServer;
-    public boolean isMineplex = false;
+    private ServerType mineplexServerType = ServerType.UNKNOWN;
+    private String mineplexServer = DEFAULT_MINEPLEX_SERVER;
+    private boolean isMineplex = false;
 
-    public String multiplayerIP = defaultMultiplayerServer;
-    public boolean onMultiplayer = false;
+    private String multiplayerIP = DEFAULT_MULTIPLAYER_SERVER;
+    private boolean onMultiplayer = false;
 
-    public void handleServerDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
-        this.multiplayerIP = ClientData.defaultMultiplayerServer;
-        this.mineplexServer = ClientData.defaultMineplexServer;
+    public void handleServerDisconnect(final FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
+        this.multiplayerIP = ClientData.DEFAULT_MULTIPLAYER_SERVER;
+        this.mineplexServer = ClientData.DEFAULT_MINEPLEX_SERVER;
         this.onMultiplayer = false;
         this.isMineplex = false;
     }
 
-    public void handleServerConnect(FMLNetworkEvent.ClientConnectedToServerEvent e) {
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                handleChecks();
-            }
-        }, 2000L);
+    public static String getDefaultMineplexServer() {
+        return DEFAULT_MINEPLEX_SERVER;
     }
 
-    public void handleChecks() {
-        BlockingQueue<ChatListener> checks = new LinkedBlockingQueue<>(Arrays.asList(
-        ));
-
-        int checksMade = 1;
-        while (!checks.isEmpty()) {
-
-            try {
-                ChatListener listener = checks.poll(2, TimeUnit.SECONDS);
-                if (listener == null || !isMineplex && listener.isMineplexOnly()) continue;
-
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        listener.startChecking();
-
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                listener.stopAndHandle();
-                            }
-                        }, 2500L);
-
-                    }
-                }, checksMade * 1000L);
-
-                checksMade++;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        }
-
+    public static String getDefaultMultiplayerServer() {
+        return DEFAULT_MULTIPLAYER_SERVER;
     }
 
+    public ServerType getMineplexServerType() {
+        return mineplexServerType;
+    }
+
+    public void setMineplexServerType(final ServerType mineplexServerType) {
+        this.mineplexServerType = mineplexServerType;
+    }
+
+    public String getMineplexServer() {
+        return mineplexServer;
+    }
+
+    public void setMineplexServer(final String mineplexServer) {
+        this.mineplexServer = mineplexServer;
+    }
+
+    public boolean isMineplex() {
+        return isMineplex;
+    }
+
+    public void setMineplex(final boolean mineplex) {
+        isMineplex = mineplex;
+    }
+
+    public String getMultiplayerIP() {
+        return multiplayerIP;
+    }
+
+    public void setMultiplayerIP(final String multiplayerIP) {
+        this.multiplayerIP = multiplayerIP;
+    }
+
+    public boolean isOnMultiplayer() {
+        return onMultiplayer;
+    }
+
+    public void setOnMultiplayer(final boolean onMultiplayer) {
+        this.onMultiplayer = onMultiplayer;
+    }
 }
