@@ -74,7 +74,7 @@ public class MainGUI extends ClansGUI {
         ScaledResolution sr = new ScaledResolution(this.mc);
         int scale = sr.getScaledHeight() / 15;
         GuiButtonCustom discord = new GuiButtonCustom(
-                1001,
+                10001,
                 sidebarEnd / 2 - sidebarEnd / 4 - scale / 2,
                 this.height - 10 - scale,
                 scale,
@@ -83,7 +83,7 @@ public class MainGUI extends ClansGUI {
                 "Discord"
         );
         GuiButtonCustom github = new GuiButtonCustom(
-                1002,
+                10002,
                 sidebarEnd / 2 + sidebarEnd / 4 - scale / 2,
                 this.height - 10 - scale,
                 scale,
@@ -151,11 +151,11 @@ public class MainGUI extends ClansGUI {
             categoryFunctions.get(button).apply(button);
         }
 
-        if (button.id == 1002) {
+        if (button.id == 10002) {
             UtilClient.openWebLink(UtilReference.GITHUB);
         }
 
-        if (button.id == 1001) {
+        if (button.id == 10001) {
             UtilClient.openWebLink(UtilReference.SUPPORT_DISCORD);
         }
 

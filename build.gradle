@@ -59,6 +59,7 @@ jar {
     }
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveName = project.modName + "-" + version + "-1.8.9.jar"
     enabled = false
 }
 
@@ -94,3 +95,37 @@ processResources {
 sourceSets {
     main { output.resourcesDir = output.classesDir }
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.4'
+}
+
+shadowJar {
+    archiveName = tasks.jar.archiveName
+    classifier = ''
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    exclude('LICENSE')
+}
+
+task copyLicenses (type: Copy) {
+    from(project.projectDir) {
+        include('LICENSE')
+        include('NOTICE')
+        include('licenses/**')
+    }
+    into(sourceSets.main.output.resourcesDir)
+}
+
+reobf {
+    shadowJar {
+        mappingType = 'searge'
+    }
+}
+
+artifacts {
+    archives jar
+    archives shadowJar
+}
+
+tasks.jar.dependsOn(tasks.copyLicenses)
