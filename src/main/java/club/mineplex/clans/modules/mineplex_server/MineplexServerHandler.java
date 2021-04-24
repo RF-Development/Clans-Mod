@@ -82,8 +82,10 @@ public class MineplexServerHandler extends ModModule {
                     }
                 }
 
-                getScoreboard();
-                update(server);
+                if (server.matches(MINEPLEX_SERVER_REGEX.pattern())) {
+                    getScoreboard();
+                    update(server);
+                }
 
             }
         }, 0, 1000L);
