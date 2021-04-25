@@ -20,8 +20,8 @@
 * Slot Locks, which prevent you from interacting with a slot in your inventory or dropping an item.
 * Discord Rich Presence with Multiplayer IP and Mineplex Lobbies support.
 * Mineplex Chat Message Filter, for G.W.E.N bulletin and redundant advanced player searches.
-* Clan Home and Stuck customizable keybinds.
-* Summon your last mount with a customizable keybind.
+* Clan Home and Stuck customizable keybinds, which are not usable while shifting. 
+* Summon your last mount with a customizable keybind, which are not usable while shifting.
 
 ## 🖊️ Author
 
