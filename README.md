@@ -7,6 +7,9 @@
   <a href="https://twitter.com/ReyEatsPie" target="_blank">
     <img alt="Twitter: ReyEatsPie" src="https://img.shields.io/twitter/follow/ReyEatsPie.svg?style=social" />
   </a>
+  <a href="https://discord.gg/tbw8ZEcpFT" target="_blank">
+    <img src="https://discordapp.com/api/guilds/655522419460669481/widget.png?style=shield" alt="Discord Shield"/>
+  </a>
 </p>
 
 > Mineplex Clans utility mod, with a variety of features to enhance your gameplay.
