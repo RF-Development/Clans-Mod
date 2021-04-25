@@ -21,7 +21,7 @@
 * Discord Rich Presence with Multiplayer IP and Mineplex Lobbies support.
 * Mineplex Chat Message Filter, for G.W.E.N bulletin and redundant advanced player searches.
 * Clan Home and Stuck customizable keybinds, which are not usable while shifting. 
-* Summon your last mount with a customizable keybind, which are not usable while shifting.
+* Summon your last mount with a customizable keybind, which is not usable while shifting.
 
 ## 🖊️ Author
 
