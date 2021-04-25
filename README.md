@@ -38,5 +38,4 @@ Contributions, issues and feature requests are welcome!<br />Feel free to check 
 
 Give a ⭐️ if you liked the mod!
 
-lol im a contributor now
 ***
