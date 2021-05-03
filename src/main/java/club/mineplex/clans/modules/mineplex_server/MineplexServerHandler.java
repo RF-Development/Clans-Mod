@@ -45,7 +45,7 @@ public class MineplexServerHandler extends ModModule {
         }
     }
 
-    public void start() {
+    private void start() {
         if (this.running) {
             return;
         }
@@ -58,7 +58,7 @@ public class MineplexServerHandler extends ModModule {
                     this.cancel();
                 }
 
-                final Optional<IChatComponent> tabHeaderOpt = getTabHeader();
+                final Optional<IChatComponent> tabHeaderOpt = MineplexServerHandler.this.getTabHeader();
                 String server = ClientData.getDefaultMineplexServer();
 
                 try {
@@ -114,7 +114,7 @@ public class MineplexServerHandler extends ModModule {
         data.setMineplexServerType(serverType);
     }
 
-    private Optional<IChatComponent> getTabHeader() {
+    protected Optional<IChatComponent> getTabHeader() {
         if (ClansMod.getInstance().getMinecraft().ingameGUI == null || !ClansMod.getInstance().getClientData().isMineplex()) {
             return Optional.empty();
         }
@@ -130,7 +130,7 @@ public class MineplexServerHandler extends ModModule {
         }
     }
 
-    private Optional<IChatComponent> getScoreboard() {
+    protected Optional<IChatComponent> getScoreboard() {
 
         try {
             if (!ClansMod.getInstance().getClientData().isMineplex()) {
