@@ -10,7 +10,6 @@ public abstract class Indicator extends ModModule {
 
     private final int horizontal;
     private final int vertical;
-    private final String name;
     private final ResourceLocation resourceLocation;
     private boolean isEnabled = false;
 
@@ -19,7 +18,6 @@ public abstract class Indicator extends ModModule {
                         final int horizontal,
                         final int vertical) {
         super(name);
-        this.name = name;
         this.resourceLocation = resourceLocation;
         this.horizontal = horizontal;
         this.vertical = vertical;
@@ -31,11 +29,6 @@ public abstract class Indicator extends ModModule {
 
     public int getVertical() {
         return vertical;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     public ResourceLocation getResourceLocation() {
