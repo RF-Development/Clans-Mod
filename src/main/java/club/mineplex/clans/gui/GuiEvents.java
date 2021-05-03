@@ -4,7 +4,6 @@ import club.mineplex.clans.ClansMod;
 import club.mineplex.clans.gui.repository.VersionBlockGUI;
 import club.mineplex.clans.utils.object.DelayedTask;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.client.event.GuiScreenEvent;

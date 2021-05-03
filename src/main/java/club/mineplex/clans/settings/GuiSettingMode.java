@@ -2,7 +2,6 @@ package club.mineplex.clans.settings;
 
 import club.mineplex.clans.ClansMod;
 import club.mineplex.clans.enums.Status;
-import club.mineplex.clans.modules.ModModule;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.config.Configuration;
 

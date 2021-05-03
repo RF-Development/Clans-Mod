@@ -1,7 +1,6 @@
 package club.mineplex.clans.settings.repository;
 
 import club.mineplex.clans.enums.Status;
-import club.mineplex.clans.modules.drop_prevention.DropPrevention;
 import club.mineplex.clans.settings.GuiSettingMode;
 import club.mineplex.clans.settings.SettingsCategory;
 

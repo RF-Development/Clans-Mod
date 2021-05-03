@@ -28,7 +28,6 @@ public class DropPrevention extends ModModule {
                 cancelled = true;
             }
 
-
             if (itemStack.getItem().getUnlocalizedName().toLowerCase().contains("foot")) {
                 if (!clansSettings.getValuableDropPrevention().getCurrentMode().equals(Status.ENABLED)) return true;
                 cancelled = true;

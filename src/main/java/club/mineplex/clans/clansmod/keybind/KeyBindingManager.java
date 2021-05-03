@@ -8,6 +8,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import java.util.*;
 
 public class KeyBindingManager {
+
     private static KeyBindingManager instance;
     private final Map<Class<? extends ModKeybind>, ModKeybind> keyBinds = new HashMap<>();
 

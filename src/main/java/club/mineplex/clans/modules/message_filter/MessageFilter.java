@@ -4,7 +4,6 @@ import club.mineplex.clans.enums.Status;
 import club.mineplex.clans.modules.ModModule;
 import club.mineplex.clans.modules.mineplex_server.ServerType;
 import club.mineplex.clans.settings.SettingsHandler;
-import club.mineplex.clans.settings.repository.ClansSettings;
 import club.mineplex.clans.settings.repository.MineplexSettings;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
