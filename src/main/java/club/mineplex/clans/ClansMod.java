@@ -25,6 +25,7 @@ import java.util.*;
 
 @Mod(modid = UtilReference.MODID, version = UtilReference.VERSION, name = UtilReference.MODNAME)
 public class ClansMod {
+
     @Mod.Instance(value = UtilReference.MODID)
     private static ClansMod instance;
     private final Map<Class<? extends ModModule>, ModModule> modules = new HashMap<>();
@@ -93,8 +94,8 @@ public class ClansMod {
         return new ArrayList<>(modules.values());
     }
 
-    private <T extends ModModule> Optional<T> getModule(final Class<T> moduleClass) {
-        return (Optional<T>) Optional.ofNullable(modules.get(moduleClass));
+    public <T extends ModModule> Optional<T> getModule(final Class<T> moduleClass) {
+        return Optional.ofNullable(moduleClass.cast(modules.get(moduleClass)));
     }
 
     public <T extends ModModule> T getModuleThrow(final Class<T> moduleClass) {
