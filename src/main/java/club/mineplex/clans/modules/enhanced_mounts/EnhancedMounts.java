@@ -10,6 +10,7 @@ import club.mineplex.clans.utils.object.DelayedTask;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.Slot;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -17,7 +18,8 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class EnhancedMounts extends ModModule {
-    private int selectedMount = -1;
+
+    private int selectedMount;
     private boolean queued = false;
 
     public EnhancedMounts() {
@@ -28,6 +30,10 @@ public class EnhancedMounts extends ModModule {
     }
 
     public void spawnMount() {
+        if (!isEnabled()) {
+            return;
+        }
+
         ClansMod.getInstance().getMinecraft().thePlayer.sendChatMessage("/mount");
         queued = true;
     }
@@ -45,7 +51,7 @@ public class EnhancedMounts extends ModModule {
             return;
         }
 
-        final ContainerChest container = (ContainerChest) ((GuiChest) event.gui).inventorySlots;
+        final ContainerChest container = (ContainerChest) ((GuiContainer) event.gui).inventorySlots;
         new DelayedTask(() ->
                 getPlayerController().windowClick(
                         container.windowId,
@@ -91,7 +97,7 @@ public class EnhancedMounts extends ModModule {
         if (!(screen instanceof GuiChest)) {
             return false;
         }
-        if (!(((GuiChest) screen).inventorySlots instanceof ContainerChest)) {
+        if (!(((GuiContainer) screen).inventorySlots instanceof ContainerChest)) {
             return false;
         }
 
