@@ -1,7 +1,7 @@
 package club.mineplex.clans.asm.mixin;
 
 import club.mineplex.clans.ClansMod;
-import club.mineplex.clans.modules.slot_lock.SlotLock;
+import club.mineplex.clans.modules.slot_lock.ModuleSlotLock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -24,7 +24,7 @@ public abstract class MixinSlotItemHandler extends Slot {
     @Inject(at = @At("HEAD"), method = "canTakeStack", cancellable = true)
     private void canTakeStack(final EntityPlayer player, final CallbackInfoReturnable<Boolean> cir) {
 
-        if (!ClansMod.getInstance().getModuleThrow(SlotLock.class).isSlotInteractable(this.getSlotIndex())) {
+        if (!ClansMod.getInstance().getModuleThrow(ModuleSlotLock.class).isSlotInteractable(this.getSlotIndex())) {
             cir.setReturnValue(false);
         }
 

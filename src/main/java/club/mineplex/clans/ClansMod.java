@@ -5,11 +5,12 @@ import club.mineplex.clans.clansmod.keybind.KeyBindingManager;
 import club.mineplex.clans.gui.GuiEvents;
 import club.mineplex.clans.listeners.ListenerServerConnection;
 import club.mineplex.clans.modules.ModModule;
-import club.mineplex.clans.modules.drop_prevention.DropPrevention;
-import club.mineplex.clans.modules.enhanced_mounts.EnhancedMounts;
-import club.mineplex.clans.modules.message_filter.MessageFilter;
-import club.mineplex.clans.modules.mineplex_server.MineplexServerHandler;
-import club.mineplex.clans.modules.slot_lock.SlotLock;
+import club.mineplex.clans.modules.drop_prevention.ModuleDropPrevention;
+import club.mineplex.clans.modules.enhanced_mounts.ModuleEnhancedMounts;
+import club.mineplex.clans.modules.map_fix.ModuleMapFix;
+import club.mineplex.clans.modules.message_filter.ModuleMessageFilter;
+import club.mineplex.clans.modules.mineplex_server.ModuleMineplexServerHandler;
+import club.mineplex.clans.modules.slot_lock.ModuleSlotLock;
 import club.mineplex.clans.modules.status_indicators.IndicatorManager;
 import club.mineplex.clans.utils.UtilClient;
 import club.mineplex.clans.utils.UtilReference;
@@ -80,11 +81,12 @@ public class ClansMod {
 
         // Enable modules
         registerModules(
-                new MineplexServerHandler(),
-                new DropPrevention(),
-                new SlotLock(),
-                new MessageFilter(),
-                new EnhancedMounts()
+                new ModuleMineplexServerHandler(),
+                new ModuleDropPrevention(),
+                new ModuleSlotLock(),
+                new ModuleMessageFilter(),
+                new ModuleEnhancedMounts(),
+                new ModuleMapFix()
         );
 
         discord.start();
@@ -94,7 +96,7 @@ public class ClansMod {
         return new ArrayList<>(modules.values());
     }
 
-    public <T extends ModModule> Optional<T> getModule(final Class<T> moduleClass) {
+    private <T extends ModModule> Optional<T> getModule(final Class<T> moduleClass) {
         return Optional.ofNullable(moduleClass.cast(modules.get(moduleClass)));
     }
 

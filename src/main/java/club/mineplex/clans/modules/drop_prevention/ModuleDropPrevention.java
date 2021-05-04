@@ -9,9 +9,9 @@ import club.mineplex.clans.utils.UtilClient;
 import club.mineplex.clans.utils.UtilText;
 import net.minecraft.item.ItemStack;
 
-public class DropPrevention extends ModModule {
+public class ModuleDropPrevention extends ModModule {
 
-    public DropPrevention() {
+    public ModuleDropPrevention() {
         super("Drop Prevention",
                 SettingsHandler.getInstance().getSettingThrow(ClansSettings.class).getLegendaryDropPrevention(),
                 SettingsHandler.getInstance().getSettingThrow(ClansSettings.class).getValuableDropPrevention()
@@ -24,12 +24,16 @@ public class DropPrevention extends ModModule {
 
             final ClansSettings clansSettings = getSettingThrow(ClansSettings.class);
             if (itemStack.getItem().getUnlocalizedName().toLowerCase().contains("record")) {
-                if (!clansSettings.getLegendaryDropPrevention().getCurrentMode().equals(Status.ENABLED)) return true;
+                if (!clansSettings.getLegendaryDropPrevention().getCurrentMode().equals(Status.ENABLED)) {
+                    return true;
+                }
                 cancelled = true;
             }
 
             if (itemStack.getItem().getUnlocalizedName().toLowerCase().contains("foot")) {
-                if (!clansSettings.getValuableDropPrevention().getCurrentMode().equals(Status.ENABLED)) return true;
+                if (!clansSettings.getValuableDropPrevention().getCurrentMode().equals(Status.ENABLED)) {
+                    return true;
+                }
                 cancelled = true;
             }
 
@@ -37,7 +41,7 @@ public class DropPrevention extends ModModule {
                 final String name = itemStack.hasDisplayName() ? itemStack.getDisplayName() : itemStack.getItem().getItemStackDisplayName(itemStack);
 
                 UtilClient.playSound("note.bass", 2F, 0.5F);
-                UtilText.sendPlayerMessageWithPrefix(this.getName(), String.format("You are not allowed to drop &e%s&r.", name));
+                UtilText.sendPlayerMessageWithPrefix(getName(), String.format("You are not allowed to drop &e%s&r.", name));
                 return false;
             }
 

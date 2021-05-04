@@ -9,7 +9,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class MessageFilter extends ModModule {
+public class ModuleMessageFilter extends ModModule {
     private static final String[] CLANS_FILTER_MESSAGE_STARTS = {
             "Clans> You cannot harm",
             "Clan Search> Too many players matched. Try a more specific search",
@@ -27,7 +27,7 @@ public class MessageFilter extends ModModule {
     };
 
 
-    public MessageFilter() {
+    public ModuleMessageFilter() {
         super("Message Filter", SettingsHandler.getInstance().getSettingThrow(MineplexSettings.class).getRedundantMessageFilter());
     }
 

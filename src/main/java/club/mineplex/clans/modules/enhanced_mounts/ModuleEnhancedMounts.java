@@ -17,12 +17,12 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class EnhancedMounts extends ModModule {
+public class ModuleEnhancedMounts extends ModModule {
 
     private int selectedMount;
     private boolean queued = false;
 
-    public EnhancedMounts() {
+    public ModuleEnhancedMounts() {
         super("Enhanced Mounts", SettingsHandler.getInstance().getSettingThrow(ClansSettings.class).getEnhancedMounts());
 
         final ClansSettings clansSettings = getSettingThrow(ClansSettings.class);
@@ -90,7 +90,7 @@ public class EnhancedMounts extends ModModule {
                 && data.getMineplexServerType() == ServerType.CLANS;
     }
 
-    public boolean isMountsGui(final GuiScreen screen) {
+    private boolean isMountsGui(final GuiScreen screen) {
         if (!isEnabled()) {
             return false;
         }
@@ -110,9 +110,13 @@ public class EnhancedMounts extends ModModule {
         return container.getLowerChestInventory().getDisplayName().getUnformattedText().equals("Manage Mounts");
     }
 
-    public boolean isMountsGui(final ContainerChest container) {
-        if (!isEnabled()) return false;
-        if (!container.getLowerChestInventory().hasCustomName()) return false;
+    private boolean isMountsGui(final ContainerChest container) {
+        if (!isEnabled()) {
+            return false;
+        }
+        if (!container.getLowerChestInventory().hasCustomName()) {
+            return false;
+        }
         return container.getLowerChestInventory().getDisplayName().getUnformattedText().equals("Manage Mounts");
     }
 

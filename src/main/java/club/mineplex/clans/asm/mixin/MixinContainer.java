@@ -1,7 +1,7 @@
 package club.mineplex.clans.asm.mixin;
 
 import club.mineplex.clans.ClansMod;
-import club.mineplex.clans.modules.slot_lock.SlotLock;
+import club.mineplex.clans.modules.slot_lock.ModuleSlotLock;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -19,7 +19,7 @@ public class MixinContainer {
                                          final ItemStack slot1,
                                          final boolean slot2,
                                          final CallbackInfoReturnable<Boolean> cir) {
-        if (!ClansMod.getInstance().getModuleThrow(SlotLock.class).isSlotInteractable(slot0)) {
+        if (!ClansMod.getInstance().getModuleThrow(ModuleSlotLock.class).isSlotInteractable(slot0)) {
             cir.setReturnValue(false);
         }
     }

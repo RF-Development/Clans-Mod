@@ -18,17 +18,17 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MineplexServerHandler extends ModModule {
+public class ModuleMineplexServerHandler extends ModModule {
 
     private static final Pattern SWITCHED_SERVER_REGEX = Pattern.compile(".*> .* sent from ([A-z]+-[\\d]+) to ([A-z]+-[\\d]+)\\.");
     private static final Pattern MINEPLEX_SERVER_REGEX = Pattern.compile("[A-z]+-[\\d]+");
 
     private boolean running = false;
 
-    public MineplexServerHandler() {
+    public ModuleMineplexServerHandler() {
         super("Mineplex Server Checker");
 
-        this.start();
+        start();
     }
 
     @SubscribeEvent
@@ -46,19 +46,19 @@ public class MineplexServerHandler extends ModModule {
     }
 
     private void start() {
-        if (this.running) {
+        if (running) {
             return;
         }
 
-        this.running = true;
+        running = true;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 if (!running) {
-                    this.cancel();
+                    cancel();
                 }
 
-                final Optional<IChatComponent> tabHeaderOpt = MineplexServerHandler.this.getTabHeader();
+                final Optional<IChatComponent> tabHeaderOpt = getTabHeader();
                 String server = ClientData.getDefaultMineplexServer();
 
                 try {
@@ -114,7 +114,7 @@ public class MineplexServerHandler extends ModModule {
         data.setMineplexServerType(serverType);
     }
 
-    protected Optional<IChatComponent> getTabHeader() {
+    private Optional<IChatComponent> getTabHeader() {
         if (ClansMod.getInstance().getMinecraft().ingameGUI == null || !ClansMod.getInstance().getClientData().isMineplex()) {
             return Optional.empty();
         }
@@ -130,7 +130,7 @@ public class MineplexServerHandler extends ModModule {
         }
     }
 
-    protected Optional<IChatComponent> getScoreboard() {
+    private Optional<IChatComponent> getScoreboard() {
 
         try {
             if (!ClansMod.getInstance().getClientData().isMineplex()) {
