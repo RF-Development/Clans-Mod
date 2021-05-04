@@ -17,8 +17,8 @@ public class GuiEvents {
         if (gui instanceof GuiMainMenu) {
             final GuiButtonMain button = new GuiButtonMain(
                     20,
-                    gui.width / 2 + 104,
-                    gui.height / 4 + 48 + 72 + 12,
+                    gui.width / 2 - 10,
+                    gui.height / 4 + 48 + 72 + 12 + 20 + 6,
                     20,
                     20
             );
