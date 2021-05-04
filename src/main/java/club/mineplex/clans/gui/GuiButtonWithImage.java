@@ -9,24 +9,24 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 
-public class GuiButtonCustom extends GuiButton {
+public class GuiButtonWithImage extends GuiButton {
 
-    public static final ResourceLocation customGUITextures = UtilResource.getResource("textures/gui/gui.png");
+    static final ResourceLocation customGUITextures = UtilResource.getResource("textures/gui/gui.png");
     private final ResourceLocation texture;
 
-    protected int textureWidth;
-    protected int textureHeight;
-    protected int horizontal;
-    protected int vertical;
-    protected boolean allImage = false;
+    int textureWidth;
+    int textureHeight;
+    int horizontal;
+    int vertical;
+    boolean allImage = false;
 
-    public GuiButtonCustom(final int buttonId,
-                           final int x,
-                           final int y,
-                           final int widthIn,
-                           final int heightIn,
-                           final ResourceLocation resource,
-                           final String alternateText) {
+    public GuiButtonWithImage(final int buttonId,
+                              final int x,
+                              final int y,
+                              final int widthIn,
+                              final int heightIn,
+                              final ResourceLocation resource,
+                              final String alternateText) {
         super(buttonId, x, y, widthIn, heightIn, alternateText);
 
         textureHeight = heightIn;
@@ -41,7 +41,7 @@ public class GuiButtonCustom extends GuiButton {
 
     @Override
     public void drawButton(final Minecraft mc, final int mouseX, final int mouseY) {
-        if (this.visible) {
+        if (visible) {
 
             if (allImage) {
                 GlStateManager.pushMatrix();
@@ -49,7 +49,7 @@ public class GuiButtonCustom extends GuiButton {
                 GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 
                 mc.getTextureManager().bindTexture(texture);
-                Gui.drawModalRectWithCustomSizedTexture(this.xPosition, this.yPosition, 0, 0, width, height, textureWidth, textureHeight);
+                Gui.drawModalRectWithCustomSizedTexture(xPosition, yPosition, 0, 0, width, height, textureWidth, textureHeight);
 
                 GlStateManager.disableBlend();
                 GlStateManager.popMatrix();
@@ -58,10 +58,10 @@ public class GuiButtonCustom extends GuiButton {
                 mc.getTextureManager().bindTexture(texture);
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-                final boolean hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+                final boolean hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
                 final Pair<Integer, Integer> pos = updatePositions(hovered);
 
-                this.drawTexturedModalRect(this.xPosition, this.yPosition, pos.getKey(), pos.getValue(), this.width, this.height);
+                drawTexturedModalRect(xPosition, yPosition, pos.getKey(), pos.getValue(), width, height);
 
             }
         }
@@ -78,7 +78,7 @@ public class GuiButtonCustom extends GuiButton {
         return allImage;
     }
 
-    public void setAllImage(boolean allImage) {
+    public void setAllImage(final boolean allImage) {
         this.allImage = allImage;
     }
 }

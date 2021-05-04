@@ -2,13 +2,13 @@ package club.mineplex.clans.gui;
 
 import club.mineplex.clans.utils.object.Pair;
 
-public class GuiButtonToggleable extends GuiButtonCustom {
+public class GuiButtonToggleable extends GuiButtonWithImage {
 
     private long lastUpdated = -1;
     private boolean on;
 
     public GuiButtonToggleable(final int buttonId, final int x, final int y) {
-        super(buttonId, x, y, 40, 20, GuiButtonCustom.customGUITextures, "");
+        super(buttonId, x, y, 40, 20, GuiButtonWithImage.customGUITextures, "");
 
         on = true;
     }
@@ -19,7 +19,7 @@ public class GuiButtonToggleable extends GuiButtonCustom {
         final int u;
         int v;
 
-        if (!this.enabled) {
+        if (!enabled) {
             u = 0;
             v = 40 + (hovered ? 20 : 0);
         } else {
@@ -36,7 +36,7 @@ public class GuiButtonToggleable extends GuiButtonCustom {
     }
 
     public void setLocked(final boolean locked) {
-        this.enabled = !locked;
+        enabled = !locked;
         lastUpdated = System.currentTimeMillis();
     }
 
@@ -49,7 +49,7 @@ public class GuiButtonToggleable extends GuiButtonCustom {
             return;
         }
 
-        this.on = enabled;
+        on = enabled;
         lastUpdated = System.currentTimeMillis();
     }
 
