@@ -13,6 +13,8 @@ import java.util.List;
 public final class GuiSettingMode extends SettingsCategory.GuiSetting {
 
     private final List<Status> modes = new ArrayList<>();
+    private final List<String> description;
+
     private int currentMode = 0;
 
     public GuiSettingMode(final String label,
@@ -20,8 +22,18 @@ public final class GuiSettingMode extends SettingsCategory.GuiSetting {
                           final Status mode1,
                           final Status mode2,
                           final Status... modes) {
+        this(label, category, null, mode1, mode2, modes);
+    }
+
+    public GuiSettingMode(final String label,
+                          final SettingsCategory category,
+                          final List<String> description,
+                          final Status mode1,
+                          final Status mode2,
+                          final Status... modes) {
         super(label, category);
 
+        this.description = description;
         Collections.addAll(
                 this.modes,
                 mode1,
@@ -34,21 +46,26 @@ public final class GuiSettingMode extends SettingsCategory.GuiSetting {
         load(mode1);
     }
 
-    public List<Status> getModes() {
+    @Override
+    public final List<String> getDescription() {
+        return description;
+    }
+
+    public final List<Status> getModes() {
         return new ArrayList<>(modes);
     }
 
-    public Status getCurrentMode() {
+    public final Status getCurrentMode() {
         return modes.get(currentMode);
     }
 
     @Override
-    protected void doClick() {
+    protected final void doClick() {
         currentMode = currentMode + 1 > modes.size() - 1 ? 0 : currentMode + 1;
     }
 
     @Override
-    public String getLabel() {
+    public final String getLabel() {
         String label = modes.get(currentMode).toString();
         if (getAssignedModule().isPresent() && getAssignedModule().get().isModuleBlocked()) {
             label = EnumChatFormatting.RED + "Blocked";
@@ -58,17 +75,17 @@ public final class GuiSettingMode extends SettingsCategory.GuiSetting {
     }
 
     @Override
-    public void save() {
+    public final void save() {
         final Configuration configuration = ClansMod.getInstance().getConfiguration();
         configuration.getCategory(getCategory().getConfigID()).get(getConfigID()).set(modes.get(currentMode).getName());
         configuration.save();
     }
 
     @Override
-    public void load(final Object defaultV) {
+    public final void load(final Object defaultV) {
 
         ClansMod.getInstance().getConfiguration().load();
-        String found = ClansMod.getInstance().getConfiguration().get(getCategory().getConfigID(), getConfigID(), defaultV.toString()).getString();
+        final String found = ClansMod.getInstance().getConfiguration().get(getCategory().getConfigID(), getConfigID(), defaultV.toString()).getString();
         ClansMod.getInstance().getConfiguration().save();
 
         currentMode = modes.stream()
