@@ -1,7 +1,8 @@
 package club.mineplex.clans.gui.repository;
 
 import club.mineplex.clans.ClansMod;
-import club.mineplex.clans.gui.GuiButtonCustom;
+import club.mineplex.clans.gui.GuiButtonHoverable;
+import club.mineplex.clans.gui.GuiButtonWithImage;
 import club.mineplex.clans.settings.SettingsCategory;
 import club.mineplex.clans.settings.SettingsHandler;
 import club.mineplex.clans.utils.UtilClient;
@@ -20,11 +21,12 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class MainGUI extends ClansGUI {
+
     private static final int BUTTON_SEPARATION = 5;
     private static final int BUTTON_HEIGHT = 20;
 
     private static final String TITLE = UtilReference.MODNAME + " v" + UtilReference.VERSION;
-    
+
     private final Map<GuiButton, Function<GuiButton, Boolean>> categoryFunctions = new HashMap<>();
     private final List<GuiButton> dynamicSettings = new ArrayList<>();
 
@@ -35,21 +37,23 @@ public class MainGUI extends ClansGUI {
     private int sidebarEnd;
 
     private SettingsCategory currentCategory = null;
+    private long lastHoveredAway = 0;
+    private GuiButton hovering = null;
 
     @Override
     public void initGui() {
         super.initGui();
 
-        titleY = this.height / 18F;
-        titleX = this.width / 2F - ClansMod.getInstance().getMinecraft().fontRendererObj.getStringWidth(TITLE) / 2F;
+        titleY = height / 18F;
+        titleX = width / 2F - ClansMod.getInstance().getMinecraft().fontRendererObj.getStringWidth(TITLE) / 2F;
         headerEnd = (int) titleY * 2 + ClansMod.getInstance().getMinecraft().fontRendererObj.FONT_HEIGHT;
-        sidebarEnd = this.width / 5;
+        sidebarEnd = width / 5;
 
         final int buttonWidth = sidebarEnd - 25;
         final int xIndex = sidebarEnd / 2 - buttonWidth / 2;
 
         final int settingsSize = SettingsHandler.getInstance().getSettings().size();
-        int yIndex = (this.height / 2 + headerEnd / 2) - (settingsSize * (BUTTON_HEIGHT) + (settingsSize - 1) * BUTTON_SEPARATION) / 2;
+        int yIndex = (height / 2 + headerEnd / 2) - (settingsSize * (BUTTON_HEIGHT) + (settingsSize - 1) * BUTTON_SEPARATION) / 2;
         int id = 1;
 
         for (final SettingsCategory category : SettingsHandler.getInstance().getSettings()) {
@@ -62,30 +66,32 @@ public class MainGUI extends ClansGUI {
                     fontRendererObj.trimStringToWidth(category.getName(), buttonWidth)
             );
 
-            this.buttonList.add(button);
-            this.categoryFunctions.put(button, guiButton -> updateCategoryButtons(category));
+            buttonList.add(button);
+            categoryFunctions.put(button, guiButton -> updateCategoryButtons(category));
 
             yIndex += BUTTON_SEPARATION + BUTTON_HEIGHT;
             id++;
         }
 
-        if (currentCategory != null) updateCategoryButtons(currentCategory);
+        if (currentCategory != null) {
+            updateCategoryButtons(currentCategory);
+        }
 
-        ScaledResolution sr = new ScaledResolution(this.mc);
-        int scale = sr.getScaledHeight() / 15;
-        GuiButtonCustom discord = new GuiButtonCustom(
+        final ScaledResolution sr = new ScaledResolution(mc);
+        final int scale = sr.getScaledHeight() / 15;
+        final GuiButtonWithImage discord = new GuiButtonWithImage(
                 10001,
                 sidebarEnd / 2 - sidebarEnd / 4 - scale / 2,
-                this.height - 10 - scale,
+                height - 10 - scale,
                 scale,
                 scale,
                 UtilResource.getResource("textures/icons/discord.png"),
                 "Discord"
         );
-        GuiButtonCustom github = new GuiButtonCustom(
+        final GuiButtonWithImage github = new GuiButtonWithImage(
                 10002,
                 sidebarEnd / 2 + sidebarEnd / 4 - scale / 2,
-                this.height - 10 - scale,
+                height - 10 - scale,
                 scale,
                 scale,
                 UtilResource.getResource("textures/icons/github.png"),
@@ -94,19 +100,19 @@ public class MainGUI extends ClansGUI {
 
         discord.setAllImage(true);
         github.setAllImage(true);
-        this.buttonList.add(discord);
-        this.buttonList.add(github);
+        buttonList.add(discord);
+        buttonList.add(github);
     }
 
     private boolean updateCategoryButtons(final SettingsCategory newCategory) {
 
-        this.buttonList.removeAll(dynamicSettings);
+        buttonList.removeAll(dynamicSettings);
         dynamicSettings.forEach(categoryFunctions::remove);
         dynamicSettings.clear();
 
         int id = 1000;
         final int settingsSize = newCategory.getSettings().size();
-        int buttonY = (this.height / 2 + headerEnd / 2) - (settingsSize * (BUTTON_HEIGHT) + (settingsSize - 1) * BUTTON_SEPARATION) / 2;
+        int buttonY = (height / 2 + headerEnd / 2) - (settingsSize * (BUTTON_HEIGHT) + (settingsSize - 1) * BUTTON_SEPARATION) / 2;
         final int buttonWidth = newCategory.getSettings()
                 .stream()
                 .mapToInt(set -> fontRendererObj.getStringWidth(set.getLabel()) + 10)
@@ -114,17 +120,18 @@ public class MainGUI extends ClansGUI {
                 .orElse(200);
 
         for (final SettingsCategory.GuiSetting setting : newCategory.getSettings()) {
-            final GuiButton button = new GuiButton(
+            final GuiButtonHoverable button = new GuiButtonHoverable(
                     id,
-                    this.width / 2 + sidebarEnd / 2 - buttonWidth / 2,
+                    width / 2 + sidebarEnd / 2 - buttonWidth / 2,
                     buttonY,
                     buttonWidth,
                     BUTTON_HEIGHT,
-                    setting.getLabel()
+                    setting.getLabel(),
+                    setting.getDescription()
             );
 
-            this.buttonList.add(button);
-            this.dynamicSettings.add(button);
+            buttonList.add(button);
+            dynamicSettings.add(button);
             categoryFunctions.put(button, guiButton -> {
 
                 if (!setting.getAssignedModule().isPresent() || !setting.getAssignedModule().get().isModuleBlocked()) {
@@ -163,16 +170,16 @@ public class MainGUI extends ClansGUI {
 
     @Override
     public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
-        this.drawDefaultBackground();
+        drawDefaultBackground();
         final String categoryTitle = currentCategory != null ? currentCategory.getName() + " Settings" : "";
         final int color = UtilColor.getChromaColor();
 
         /* HEADER */
-        drawRect(0, 0, this.width, headerEnd, new Color(255, 255, 255, 50).getRGB());
+        drawRect(0, 0, width, headerEnd, new Color(255, 255, 255, 50).getRGB());
         fontRendererObj.drawStringWithShadow(TITLE, titleX, titleY, color);
 
         /* SIDEBAR */
-        drawRect(0, headerEnd, sidebarEnd, this.height, new Color(50, 50, 50, 150).getRGB());
+        drawRect(0, headerEnd, sidebarEnd, height, new Color(50, 50, 50, 150).getRGB());
         fontRendererObj.drawStringWithShadow(
                 "Settings",
                 sidebarEnd / 2F - fontRendererObj.getStringWidth("Settings") / 2F,
@@ -181,23 +188,46 @@ public class MainGUI extends ClansGUI {
         );
 
         /* SETTINGS PAGE */
-        drawRect(sidebarEnd, headerEnd, this.width, headerEnd + (headerEnd / 2), new Color(10, 10, 10, 175).getRGB());
-        drawRect(sidebarEnd, this.height - headerEnd + (headerEnd / 2), this.width, this.height, new Color(10, 10, 10, 175).getRGB());
+        drawRect(sidebarEnd, headerEnd, width, headerEnd + (headerEnd / 2), new Color(10, 10, 10, 175).getRGB());
+        drawRect(sidebarEnd, height - headerEnd + (headerEnd / 2), width, height, new Color(10, 10, 10, 175).getRGB());
         fontRendererObj.drawStringWithShadow(
                 categoryTitle,
-                (this.width - fontRendererObj.getStringWidth(categoryTitle) + sidebarEnd) / 2F,
+                (width - fontRendererObj.getStringWidth(categoryTitle) + sidebarEnd) / 2F,
                 headerEnd + (headerEnd / 4F) - fontRendererObj.FONT_HEIGHT / 2F,
                 new Color(150, 150, 150, 150).getRGB()
         );
 
-        drawHorizontalLine(0, this.width, headerEnd, color);
-        drawVerticalLine(sidebarEnd, headerEnd, this.height, color);
+        drawHorizontalLine(0, width, headerEnd, color);
+        drawVerticalLine(sidebarEnd, headerEnd, height, color);
+
+        super.drawScreen(mouseX, mouseY, partialTicks);
 
 //        TEST GRID
 //        drawHorizontalLine(0, this.width, this.height / 2 + headerEnd / 2, UtilColor.getChromaColor());
 //        drawVerticalLine(this.width / 2 + sidebarEnd / 2, this.headerEnd, this.height, color);
 
-        super.drawScreen(mouseX, mouseY, partialTicks);
+        if (hovering != null && !hovering.isMouseOver()) {
+            hovering = null;
+            lastHoveredAway = 0;
+        }
+
+        for (final GuiButton button : buttonList) {
+            if (!(button instanceof GuiButtonHoverable)) {
+                continue;
+            }
+
+            final GuiButtonHoverable hoverable = (GuiButtonHoverable) button;
+            if (hoverable.isMouseOver()) {
+                hovering = hoverable;
+                lastHoveredAway += partialTicks * 1000 / 20;
+
+                if (hoverable.getDescription().isPresent() && lastHoveredAway > 500) {
+                    drawHoveringText(hoverable.getDescription().get(), mouseX, mouseY);
+                }
+            }
+
+        }
+
     }
 
 }
