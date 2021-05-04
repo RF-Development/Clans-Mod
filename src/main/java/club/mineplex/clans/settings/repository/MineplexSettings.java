@@ -22,7 +22,8 @@ public class MineplexSettings extends SettingsCategory {
                 "● 'You cannot harm' message",
                 "● Redundant 'no matches found' search message",
                 "● Redundant 'too many matches found' search message",
-                "● GWEN Bulletin"
+                "● GWEN Bulletin",
+                "● Clans map bug message when switching servers"
         ), Status.ENABLED, Status.DISABLED);
 
         addSettings(

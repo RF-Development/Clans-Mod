@@ -14,7 +14,7 @@ public class ModuleMessageFilter extends ModModule {
             "Clans> You cannot harm",
             "Clan Search> Too many players matched. Try a more specific search",
             "Clan Search> No clans matched. Try a more specific search",
-            "Clan Search> No players matched. Try a more specific search"
+            "Clan Search> No players matched. Try a more specific search",
     };
 
     private static final String[] FILTER_MESSAGE_STARTS = {
@@ -23,7 +23,10 @@ public class ModuleMessageFilter extends ModModule {
             "were detected as cheaters and",
             "were removed from the network!",
             "This does not include the number",
-            "of accounts in the next banwave."
+            "of accounts in the next banwave.",
+            "WARNING!",
+            "There's a bug where switching servers will freeze the Clans Map!",
+            "If you want to play on Clans again, rejoin the Mineplex server!"
     };
 
 
