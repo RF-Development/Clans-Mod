@@ -4,7 +4,13 @@ import club.mineplex.clans.ClansMod;
 import club.mineplex.clans.ClientData;
 import club.mineplex.clans.utils.UtilReference;
 import club.mineplex.clans.utils.UtilText;
+import club.mineplex.clans.utils.object.DelayedTask;
 import io.netty.channel.local.LocalAddress;
+import net.minecraft.client.Minecraft;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
@@ -89,15 +95,31 @@ public class ListenerServerConnection {
     }
 
     private void checkModVersion() {
-        if (!data.isLatestVersion()) {
+        if (data.isLatestVersion()) {
             return;
         }
 
-        UtilText.sendPlayerMessage("&cThere is a new &4&lClans Mod &r&cversion available!");
-        UtilText.sendPlayerMessage("&cYour version: &7" + UtilReference.VERSION);
-        UtilText.sendPlayerMessage("&cNewer version: &7" + data.getLatestVersion());
-        UtilText.sendPlayerMessage("&cYou can download it at &4" + UtilReference.DOWNLOAD);
-        UtilText.sendPlayerMessage("&cYou can view the source code at &4" + UtilReference.GITHUB);
+        final IChatComponent github = new ChatComponentText(EnumChatFormatting.DARK_RED + "here");
+        github.getChatStyle().setChatClickEvent(
+                new ClickEvent(ClickEvent.Action.OPEN_URL, UtilReference.GITHUB)
+        );
+        final IChatComponent githubMessage = new ChatComponentText(EnumChatFormatting.RED + "You can view the source code ");
+        githubMessage.appendSibling(github);
+
+        final IChatComponent download = new ChatComponentText(EnumChatFormatting.DARK_RED + "here");
+        download.getChatStyle().setChatClickEvent(
+                new ClickEvent(ClickEvent.Action.OPEN_URL, UtilReference.DOWNLOAD)
+        );
+        final IChatComponent downloadMessage = new ChatComponentText(EnumChatFormatting.RED + "You can download it ");
+        downloadMessage.appendSibling(download);
+
+        new DelayedTask(() -> {
+            UtilText.sendPlayerMessage("&cThere is a new &4&lClans Mod &r&cversion available!");
+            UtilText.sendPlayerMessage("&cYour version: &7" + UtilReference.VERSION);
+            UtilText.sendPlayerMessage("&cNewer version: &7" + data.getLatestVersion());
+            Minecraft.getMinecraft().thePlayer.addChatComponentMessage(downloadMessage);
+            Minecraft.getMinecraft().thePlayer.addChatComponentMessage(githubMessage);
+        }, 30);
     }
 
 }

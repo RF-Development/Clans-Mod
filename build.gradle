@@ -58,7 +58,7 @@ jar {
     }
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    archiveName = project.modName + "-" + version + "-1.8.9.jar"
+    archiveName = project.modName + "-" + project.minecraftVersion + "-" + version + ".jar"
     enabled = false
 }
 
@@ -128,3 +128,4 @@ artifacts {
 }
 
 tasks.jar.dependsOn(tasks.copyLicenses)
+reobfJar.enabled = false
