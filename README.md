@@ -25,6 +25,8 @@
 * Mineplex Chat Message Filter, for G.W.E.N bulletin and redundant advanced player searches.
 * Clan Home and Stuck customizable keybinds, which are not usable while shifting. 
 * Summon your last mount with a customizable keybind, which is not usable while shifting.
+* Clans map fix; your map won't freeze when switching servers anymore.
+* Version checker to notify you of any updates.
 
 ## 🖊️ Author
 
