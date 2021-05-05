@@ -17,10 +17,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-public class SlotLock extends ModModule {
+public class ModuleSlotLock extends ModModule {
     private int[] lockedSlots;
 
-    public SlotLock() {
+    public ModuleSlotLock() {
         super("Slot Lock", SettingsHandler.getInstance().getSettingThrow(ClansSettings.class).getSlotLocks());
 
         final ClansSettings clansSettings = SettingsHandler.getInstance().getSettingThrow(ClansSettings.class);
@@ -44,7 +44,7 @@ public class SlotLock extends ModModule {
         }
     }
 
-    public void lockUnlockSlot(final int slotIndex) {
+    private void lockUnlockSlot(final int slotIndex) {
         if (!isEnabled()) {
             return;
         }

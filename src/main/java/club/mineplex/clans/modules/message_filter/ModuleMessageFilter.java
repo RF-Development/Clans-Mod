@@ -4,18 +4,17 @@ import club.mineplex.clans.enums.Status;
 import club.mineplex.clans.modules.ModModule;
 import club.mineplex.clans.modules.mineplex_server.ServerType;
 import club.mineplex.clans.settings.SettingsHandler;
-import club.mineplex.clans.settings.repository.ClansSettings;
 import club.mineplex.clans.settings.repository.MineplexSettings;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class MessageFilter extends ModModule {
+public class ModuleMessageFilter extends ModModule {
     private static final String[] CLANS_FILTER_MESSAGE_STARTS = {
             "Clans> You cannot harm",
             "Clan Search> Too many players matched. Try a more specific search",
             "Clan Search> No clans matched. Try a more specific search",
-            "Clan Search> No players matched. Try a more specific search"
+            "Clan Search> No players matched. Try a more specific search",
     };
 
     private static final String[] FILTER_MESSAGE_STARTS = {
@@ -24,11 +23,14 @@ public class MessageFilter extends ModModule {
             "were detected as cheaters and",
             "were removed from the network!",
             "This does not include the number",
-            "of accounts in the next banwave."
+            "of accounts in the next banwave.",
+            "WARNING!",
+            "There's a bug where switching servers will freeze the Clans Map!",
+            "If you want to play on Clans again, rejoin the Mineplex server!"
     };
 
 
-    public MessageFilter() {
+    public ModuleMessageFilter() {
         super("Message Filter", SettingsHandler.getInstance().getSettingThrow(MineplexSettings.class).getRedundantMessageFilter());
     }
 

@@ -2,7 +2,7 @@ package club.mineplex.clans.asm.mixin;
 
 import club.mineplex.clans.ClansMod;
 import club.mineplex.clans.events.PreItemDropEvent;
-import club.mineplex.clans.modules.drop_prevention.DropPrevention;
+import club.mineplex.clans.modules.drop_prevention.ModuleDropPrevention;
 import club.mineplex.clans.utils.UtilMixins;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -23,9 +23,12 @@ public abstract class MixinEntityPlayerSP {
 
     @Inject(method = "dropOneItem", at = @At("HEAD"), cancellable = true)
     private void dropOneItem(final boolean dropAll, final CallbackInfoReturnable<EntityItem> callback) {
-        final Slot heldSlot = UtilMixins.getSlotInHotbar(this.mc.thePlayer.inventory.currentItem);
+        final Slot heldSlot = UtilMixins.getSlotInHotbar(mc.thePlayer.inventory.currentItem);
 
-        if (this.mc.thePlayer.getHeldItem() != heldSlot.getStack()) {
+        // Updates the rendered selected slot and the itemstack object being held
+        Minecraft.getMinecraft().playerController.updateController();
+
+        if (mc.thePlayer.getHeldItem() != heldSlot.getStack()) {
             callback.cancel();
             return;
         }
@@ -37,8 +40,8 @@ public abstract class MixinEntityPlayerSP {
         }
 
         // Drop Prevention
-        final DropPrevention dropPrevention = ClansMod.getInstance().getModuleThrow(DropPrevention.class);
-        if (!dropPrevention.handleDrop(this.mc.thePlayer.getHeldItem())) {
+        final ModuleDropPrevention dropPrevention = ClansMod.getInstance().getModuleThrow(ModuleDropPrevention.class);
+        if (!dropPrevention.handleDrop(mc.thePlayer.getHeldItem())) {
             callback.setReturnValue(null);
         }
 

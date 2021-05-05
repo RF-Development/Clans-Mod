@@ -7,24 +7,21 @@ import club.mineplex.clans.utils.object.DelayedTask;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.stream.MalformedJsonException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 public class UtilClient {
     private UtilClient() {
     }
 
-    public static void openWebLink(String url) {
+    public static void openWebLink(final String url) {
         try {
-            Class<?> oclass = Class.forName("java.awt.Desktop");
-            Object object = oclass.getMethod("getDesktop", new Class[0]).invoke(null, new Object[0]);
-            oclass.getMethod("browse", new Class[] {URI.class}).invoke(object, new Object[] {new URI(url)});
-        } catch (Exception e) {
+            final Class<?> oclass = Class.forName("java.awt.Desktop");
+            final Object object = oclass.getMethod("getDesktop", new Class[0]).invoke(null, new Object[0]);
+            oclass.getMethod("browse", new Class[]{URI.class}).invoke(object, new Object[]{new URI(url)});
+        } catch (final Exception e) {
             System.err.println("Couldn\\'t open link");
             e.printStackTrace();
         }
@@ -41,47 +38,56 @@ public class UtilClient {
     public static void checkModVersion(final ClientData clientData) {
 
         try {
-        final ConnectionBuilder builder = new ConnectionBuilder("http://api.mineplex.club/clansmod/version");
-        builder.header("Content-Type", "application/json");
-        builder.send();
-        builder.skipRedirects();
+            final ConnectionBuilder builder = new ConnectionBuilder("http://api.mineplex.club/clansmod/version");
+            builder.header("Content-Type", "application/json");
+            builder.send();
+            builder.skipRedirects();
 
-        final JsonObject obj = new Gson().fromJson(builder.getResponseString(), JsonObject.class);
-        final String latestVersion = obj.get("latest-version").getAsString();
-        final String latestRequired = obj.get("latest-required").getAsString();
-        final String[] arrayRequired = latestRequired.split("\\.");
-        final String[] arrayCurrent = UtilReference.VERSION.split("\\.");
+            final JsonObject obj = new Gson().fromJson(builder.getResponseString(), JsonObject.class);
+            final String latestVersion = obj.get("latest-version").getAsString();
+            final String latestRequired = obj.get("latest-required").getAsString();
 
-        clientData.setLatestRequiredVersion(latestRequired);
-        clientData.setLatestVersion(latestVersion);
+            clientData.setLatestRequiredVersion(latestRequired);
+            clientData.setLatestVersion(latestVersion);
 
-            for (int i = 0; i < Math.max(arrayCurrent.length, arrayRequired.length); i++) {
-                final int indexRequired = i < arrayRequired.length ? Integer.parseInt(arrayRequired[i]) : 0;
-                final int indexCurrent = i < arrayCurrent.length ? Integer.parseInt(arrayCurrent[i]) : 0;
+            clientData.setHasLatestRequiredVersion(isGreaterVersion(latestRequired, UtilReference.VERSION));
+            clientData.setHasLatest(isGreaterVersion(latestVersion, UtilReference.VERSION));
 
-                if (indexCurrent >= indexRequired) {
-                    continue;
-                }
-
-                clientData.setHasLatestRequiredVersion(false);
-            }
-        } catch (JsonSyntaxException e) {
+        } catch (final JsonSyntaxException e) {
             e.printStackTrace();
         }
     }
 
-    public static boolean isModFeatureAllowed(String moduleId) {
-        ConnectionBuilder builder = new ConnectionBuilder("http://api.mineplex.club/clansmod/features/verify?id=" + moduleId);
+    public static boolean isModFeatureAllowed(final String moduleId) {
+        final ConnectionBuilder builder = new ConnectionBuilder("http://api.mineplex.club/clansmod/features/verify?id=" + moduleId);
         builder.send();
         builder.skipRedirects();
 
         try {
-            String state = new Gson().fromJson(builder.getResponseString(), JsonObject.class).get("state").getAsString();
+            final String state = new Gson().fromJson(builder.getResponseString(), JsonObject.class).get("state").getAsString();
             return Boolean.parseBoolean(state);
-        } catch (JsonSyntaxException e) {
+        } catch (final JsonSyntaxException e) {
             e.printStackTrace();
             return true;
         }
-
     }
+
+    private static boolean isGreaterVersion(final String lower, final String higher) {
+        final String[] arrayLower = lower.split("\\.");
+        final String[] arrayHigher = higher.split("\\.");
+
+        for (int i = 0; i < Math.max(arrayHigher.length, arrayLower.length); i++) {
+            final int indexRequired = i < arrayLower.length ? Integer.parseInt(arrayLower[i]) : 0;
+            final int indexCurrent = i < arrayHigher.length ? Integer.parseInt(arrayHigher[i]) : 0;
+
+            if (indexCurrent >= indexRequired) {
+                continue;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
 }

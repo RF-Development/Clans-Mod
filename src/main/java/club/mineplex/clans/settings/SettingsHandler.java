@@ -37,7 +37,7 @@ public class SettingsHandler {
     }
 
     public <T extends SettingsCategory> Optional<T> getSetting(final Class<T> categoryClass) {
-        return (Optional<T>) Optional.ofNullable(settings.get(categoryClass));
+        return Optional.ofNullable(categoryClass.cast(settings.get(categoryClass)));
     }
 
     public <T extends SettingsCategory> T getSettingThrow(final Class<T> categoryClass) {

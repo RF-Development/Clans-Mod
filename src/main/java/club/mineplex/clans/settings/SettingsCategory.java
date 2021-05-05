@@ -38,24 +38,24 @@ public abstract class SettingsCategory {
         private final SettingsCategory category;
         private ModModule assignedModule = null;
 
-        protected GuiSetting(final String name, final SettingsCategory category) {
+        GuiSetting(final String name, final SettingsCategory category) {
             this.name = name;
             this.category = category;
-        }
-
-        public void setAssignedModule(ModModule module) {
-            this.assignedModule = module;
         }
 
         public Optional<ModModule> getAssignedModule() {
             return Optional.ofNullable(assignedModule);
         }
 
+        public void setAssignedModule(final ModModule module) {
+            assignedModule = module;
+        }
+
         public String getName() {
             return name;
         }
 
-        public SettingsCategory getCategory() {
+        SettingsCategory getCategory() {
             return category;
         }
 
@@ -64,7 +64,7 @@ public abstract class SettingsCategory {
             save();
         }
 
-        protected String getConfigID() {
+        String getConfigID() {
             return getName().toLowerCase().replaceAll(" ", "-");
         }
 
@@ -75,6 +75,8 @@ public abstract class SettingsCategory {
         public abstract void save();
 
         public abstract void load(Object defaultV);
+
+        public abstract List<String> getDescription();
 
     }
 

@@ -4,7 +4,6 @@ import club.mineplex.clans.ClansMod;
 import club.mineplex.clans.gui.repository.VersionBlockGUI;
 import club.mineplex.clans.utils.object.DelayedTask;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -18,8 +17,8 @@ public class GuiEvents {
         if (gui instanceof GuiMainMenu) {
             final GuiButtonMain button = new GuiButtonMain(
                     20,
-                    gui.width / 2 + 104,
-                    gui.height / 4 + 48 + 72 + 12,
+                    gui.width / 2 - 10,
+                    gui.height / 4 + 48 + 72 + 12 + 20 + 6,
                     20,
                     20
             );

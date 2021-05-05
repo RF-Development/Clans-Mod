@@ -18,17 +18,17 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MineplexServerHandler extends ModModule {
+public class ModuleMineplexServerHandler extends ModModule {
 
     private static final Pattern SWITCHED_SERVER_REGEX = Pattern.compile(".*> .* sent from ([A-z]+-[\\d]+) to ([A-z]+-[\\d]+)\\.");
     private static final Pattern MINEPLEX_SERVER_REGEX = Pattern.compile("[A-z]+-[\\d]+");
 
     private boolean running = false;
 
-    public MineplexServerHandler() {
+    public ModuleMineplexServerHandler() {
         super("Mineplex Server Checker");
 
-        this.start();
+        start();
     }
 
     @SubscribeEvent
@@ -45,17 +45,17 @@ public class MineplexServerHandler extends ModModule {
         }
     }
 
-    public void start() {
-        if (this.running) {
+    private void start() {
+        if (running) {
             return;
         }
 
-        this.running = true;
+        running = true;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 if (!running) {
-                    this.cancel();
+                    cancel();
                 }
 
                 final Optional<IChatComponent> tabHeaderOpt = getTabHeader();

@@ -25,7 +25,7 @@ public abstract class ModModule {
         }
     }
 
-    public String getName() {
+    public final String getName() {
         return this.name;
     }
 
@@ -37,27 +37,27 @@ public abstract class ModModule {
         return this.isModuleUsable() && !this.isModuleBlocked();
     }
 
-    public boolean isModuleBlocked() {
+    public final boolean isModuleBlocked() {
         return this.isBlocked;
     }
 
-    protected ClansMod getMod() {
+    protected final ClansMod getMod() {
         return ClansMod.getInstance();
     }
 
-    protected <T extends SettingsCategory> T getSettingThrow(final Class<T> categoryClass) {
+    protected final <T extends SettingsCategory> T getSettingThrow(final Class<T> categoryClass) {
         return SettingsHandler.getInstance().getSettingThrow(categoryClass);
     }
 
-    protected Minecraft getMinecraft() {
+    protected final Minecraft getMinecraft() {
         return Minecraft.getMinecraft();
     }
 
-    protected EntityPlayerSP getPlayer() {
+    protected final EntityPlayerSP getPlayer() {
         return this.getMinecraft().thePlayer;
     }
 
-    protected PlayerControllerMP getPlayerController() {
+    protected final PlayerControllerMP getPlayerController() {
         return this.getMinecraft().playerController;
     }
 }
