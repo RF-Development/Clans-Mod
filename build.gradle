@@ -3,8 +3,8 @@ buildscript {
         jcenter()
         mavenCentral()
         maven { url = "https://plugins.gradle.org/m2/" }
-        maven { url = 'https://repo.spongepowered.org/maven' }
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+        maven { url = "https://maven.minecraftforge.net/" }
     }
 
     dependencies {
@@ -19,7 +19,6 @@ repositories {
     maven { url = "https://plugins.gradle.org/m2/" }
     maven { url = 'https://maven.minecraftforge.net/' }
     maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-    maven { url = "http://files.minecraftforge.net/maven" }
     maven { url = 'https://jitpack.io' }
 }
 
@@ -37,7 +36,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 compileJava.options.encoding = 'UTF-8'
 
 mixin {
-    defaultObfuscationEnv searge
+    defaultObfuscationEnv 'searge'
     add sourceSets.main, "clansmod.refmap.json"
 }
 
@@ -108,7 +107,7 @@ shadowJar {
     exclude('LICENSE')
 }
 
-task copyLicenses (type: Copy) {
+task copyLicenses(type: Copy) {
     from(project.projectDir) {
         include('LICENSE')
         include('NOTICE')
