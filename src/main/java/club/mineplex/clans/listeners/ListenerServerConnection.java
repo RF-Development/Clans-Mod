@@ -2,6 +2,8 @@ package club.mineplex.clans.listeners;
 
 import club.mineplex.clans.ClansMod;
 import club.mineplex.clans.ClientData;
+import club.mineplex.clans.utils.UtilReference;
+import club.mineplex.clans.utils.UtilText;
 import io.netty.channel.local.LocalAddress;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
@@ -78,11 +80,24 @@ public class ListenerServerConnection {
 
         data.setMineplex(ip.endsWith("mineplex.com") || mineplexAddresses.contains(ip));
         data.setMultiplayerIP(ip);
+        checkModVersion();
     }
 
     @SubscribeEvent
     public void onDisconnect(final FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         data.handleServerDisconnect(event);
+    }
+
+    private void checkModVersion() {
+        if (!data.isLatestVersion()) {
+            return;
+        }
+
+        UtilText.sendPlayerMessage("&cThere is a new &4&lClans Mod &r&cversion available!");
+        UtilText.sendPlayerMessage("&cYour version: &7" + UtilReference.VERSION);
+        UtilText.sendPlayerMessage("&cNewer version: &7" + data.getLatestVersion());
+        UtilText.sendPlayerMessage("&cYou can download it at &4" + UtilReference.DOWNLOAD);
+        UtilText.sendPlayerMessage("&cYou can view the source code at &4" + UtilReference.GITHUB);
     }
 
 }
