@@ -25,6 +25,9 @@ public abstract class MixinEntityPlayerSP {
     private void dropOneItem(final boolean dropAll, final CallbackInfoReturnable<EntityItem> callback) {
         final Slot heldSlot = UtilMixins.getSlotInHotbar(mc.thePlayer.inventory.currentItem);
 
+        // Updates the rendered selected slot and the itemstack object being held
+        Minecraft.getMinecraft().playerController.updateController();
+
         if (mc.thePlayer.getHeldItem() != heldSlot.getStack()) {
             callback.cancel();
             return;
