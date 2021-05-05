@@ -95,7 +95,7 @@ public class ListenerServerConnection {
     }
 
     private void checkModVersion() {
-        if (data.isLatestVersion()) {
+        if (data.hasLatestVersion()) {
             return;
         }
 

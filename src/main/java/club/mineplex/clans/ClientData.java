@@ -19,6 +19,7 @@ public class ClientData {
     private String latestRequiredVersion = UtilReference.VERSION;
     private String latestVersion = UtilReference.VERSION;
     private boolean hasLatestRequired = true;
+    private boolean hasLatest = false;
 
     public static String getDefaultMineplexServer() {
         return DEFAULT_MINEPLEX_SERVER;
@@ -87,12 +88,16 @@ public class ClientData {
         return latestVersion;
     }
 
-    public boolean isLatestVersion() {
-        return UtilReference.VERSION.equals(latestVersion);
-    }
-
     public void setLatestVersion(final String latestVersion) {
         this.latestVersion = latestVersion;
+    }
+
+    public boolean hasLatestVersion() {
+        return hasLatest;
+    }
+
+    public void setHasLatest(final boolean hasLatest) {
+        this.hasLatest = hasLatest;
     }
 
     public boolean hasLatestRequiredVersion() {
