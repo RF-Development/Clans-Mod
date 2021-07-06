@@ -16,7 +16,7 @@ public class ModRolesCache extends ModCache<Map<UUID, ArrayList<ModRole>>> {
 
     private Optional<RolesModel> getWebRolesModel() {
         try {
-            final String scrape = UtilHTTP.mineplexScrape("http://localhost:9090/clansmod/roles");
+            final String scrape = UtilHTTP.mineplexScrape("https://api.mineplex.club/clansmod/roles");
             return Optional.ofNullable(GSON.fromJson(scrape, RolesModel.class));
         } catch (final IOException e) {
             e.printStackTrace();

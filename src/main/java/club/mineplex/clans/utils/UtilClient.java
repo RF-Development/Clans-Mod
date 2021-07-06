@@ -36,7 +36,7 @@ public class UtilClient {
     public static void checkModVersion(final ClientData clientData) {
 
         try {
-            final ConnectionBuilder builder = new ConnectionBuilder("http://localhost:9090/clansmod/version");
+            final ConnectionBuilder builder = new ConnectionBuilder("http://api.mineplex.club/clansmod/version");
             builder.header("Content-Type", "application/json");
             builder.send();
             builder.skipRedirects();
@@ -55,7 +55,7 @@ public class UtilClient {
     }
 
     public static boolean isModFeatureAllowed(final String moduleId) {
-        final ConnectionBuilder builder = new ConnectionBuilder("http://localhost:9090/clansmod/features");
+        final ConnectionBuilder builder = new ConnectionBuilder("http://api.mineplex.club/clansmod/features");
         builder.send();
         builder.skipRedirects();
 
