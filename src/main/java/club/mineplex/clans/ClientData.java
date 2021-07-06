@@ -17,9 +17,8 @@ public class ClientData {
     private boolean onMultiplayer = false;
 
     private String latestRequiredVersion = UtilReference.VERSION;
-    private String latestVersion = UtilReference.VERSION;
     private boolean hasLatestRequired = true;
-    private boolean hasLatest = false;
+    private String modDownloadUrl = null;
 
     public static String getDefaultMineplexServer() {
         return DEFAULT_MINEPLEX_SERVER;
@@ -84,28 +83,20 @@ public class ClientData {
         this.latestRequiredVersion = latestRequiredVersion;
     }
 
-    public String getLatestVersion() {
-        return latestVersion;
-    }
-
-    public void setLatestVersion(final String latestVersion) {
-        this.latestVersion = latestVersion;
-    }
-
-    public boolean hasLatestVersion() {
-        return hasLatest;
-    }
-
-    public void setHasLatest(final boolean hasLatest) {
-        this.hasLatest = hasLatest;
-    }
-
     public boolean hasLatestRequiredVersion() {
         return hasLatestRequired;
     }
 
     public void setHasLatestRequiredVersion(final boolean hasLatestRequired) {
         this.hasLatestRequired = hasLatestRequired;
+    }
+
+    public String getModDownloadUrl() {
+        return modDownloadUrl;
+    }
+
+    public void setModDownloadUrl(final String modDownloadUrl) {
+        this.modDownloadUrl = modDownloadUrl;
     }
 
 }

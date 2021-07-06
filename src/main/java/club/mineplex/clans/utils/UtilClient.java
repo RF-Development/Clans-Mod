@@ -4,9 +4,7 @@ import club.mineplex.clans.ClansMod;
 import club.mineplex.clans.ClientData;
 import club.mineplex.clans.utils.object.ConnectionBuilder;
 import club.mineplex.clans.utils.object.DelayedTask;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -38,20 +36,18 @@ public class UtilClient {
     public static void checkModVersion(final ClientData clientData) {
 
         try {
-            final ConnectionBuilder builder = new ConnectionBuilder("http://api.mineplex.club/clansmod/version");
+            final ConnectionBuilder builder = new ConnectionBuilder("http://localhost:9090/clansmod/version");
             builder.header("Content-Type", "application/json");
             builder.send();
             builder.skipRedirects();
 
             final JsonObject obj = new Gson().fromJson(builder.getResponseString(), JsonObject.class);
-            final String latestVersion = obj.get("latest-version").getAsString();
-            final String latestRequired = obj.get("latest-required").getAsString();
+            final String latestVersion = obj.get("lastVersion").getAsString();
+            final String downloadUrl = obj.get("downloadUrl").getAsString();
 
-            clientData.setLatestRequiredVersion(latestRequired);
-            clientData.setLatestVersion(latestVersion);
-
-            clientData.setHasLatestRequiredVersion(isGreaterVersion(latestRequired, UtilReference.VERSION));
-            clientData.setHasLatest(isGreaterVersion(latestVersion, UtilReference.VERSION));
+            clientData.setLatestRequiredVersion(latestVersion);
+            clientData.setHasLatestRequiredVersion(isGreaterVersion(latestVersion, UtilReference.VERSION));
+            clientData.setModDownloadUrl(downloadUrl);
 
         } catch (final JsonSyntaxException e) {
             e.printStackTrace();
@@ -59,17 +55,29 @@ public class UtilClient {
     }
 
     public static boolean isModFeatureAllowed(final String moduleId) {
-        final ConnectionBuilder builder = new ConnectionBuilder("http://api.mineplex.club/clansmod/features/verify?id=" + moduleId);
+        final ConnectionBuilder builder = new ConnectionBuilder("http://localhost:9090/clansmod/features");
         builder.send();
         builder.skipRedirects();
 
         try {
-            final String state = new Gson().fromJson(builder.getResponseString(), JsonObject.class).get("state").getAsString();
-            return Boolean.parseBoolean(state);
+            final Gson gson = new Gson();
+            final JsonArray array = gson.fromJson(builder.getResponseString(), JsonArray.class);
+
+            for (final JsonElement jsonElement : array) {
+                final JsonObject object = jsonElement.getAsJsonObject();
+
+                if (object.get("name").getAsString().equals(moduleId)) {
+                    return object.get("enabled").getAsBoolean();
+                }
+
+            }
+
         } catch (final JsonSyntaxException e) {
             e.printStackTrace();
             return true;
         }
+
+        return true;
     }
 
     private static boolean isGreaterVersion(final String lower, final String higher) {

@@ -16,9 +16,9 @@ public class ModRolesCache extends ModCache<Map<UUID, ArrayList<ModRole>>> {
 
     private Optional<RolesModel> getWebRolesModel() {
         try {
-            String scrape = UtilHTTP.mineplexScrape("https://api.mineplex.club/clansmod/roles");
+            final String scrape = UtilHTTP.mineplexScrape("http://localhost:9090/clansmod/roles");
             return Optional.ofNullable(GSON.fromJson(scrape, RolesModel.class));
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
             return Optional.empty();
         }
@@ -33,14 +33,14 @@ public class ModRolesCache extends ModCache<Map<UUID, ArrayList<ModRole>>> {
     public void updateCache() {
         modRoles.clear();
 
-        Optional<RolesModel> rolesModelOpt = getWebRolesModel();
+        final Optional<RolesModel> rolesModelOpt = getWebRolesModel();
         if (!rolesModelOpt.isPresent()) {
             return;
         }
 
-        for (Map.Entry<String, List<UUID>> entry : rolesModelOpt.get().getRoles().entrySet()) {
+        for (final Map.Entry<String, List<UUID>> entry : rolesModelOpt.get().getRoles().entrySet()) {
             ModRole.of(entry.getKey()).ifPresent(role -> {
-                        for (UUID playerUUID : entry.getValue()) {
+                        for (final UUID playerUUID : entry.getValue()) {
                             modRoles.computeIfAbsent(playerUUID, k -> new ArrayList<>())
                                     .add(role);
                         }

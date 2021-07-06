@@ -10,12 +10,12 @@ public class VersionBlockGUI extends ClansGUI {
     public void initGui() {
         super.initGui();
 
-        String buttonTitle = "Click here to view the changelog and get the download!";
-        int buttonWidth = fontRendererObj.getStringWidth(buttonTitle) + 15;
-        this.buttonList.add(new GuiButton(
+        final String buttonTitle = "Click here to get the download!";
+        final int buttonWidth = fontRendererObj.getStringWidth(buttonTitle) + 15;
+        buttonList.add(new GuiButton(
                 999,
-                this.width / 2 - buttonWidth / 2,
-                this.height / 2 + 20,
+                width / 2 - buttonWidth / 2,
+                height / 2 + 20,
                 buttonWidth,
                 20,
                 buttonTitle
@@ -23,9 +23,9 @@ public class VersionBlockGUI extends ClansGUI {
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) {
+    protected void actionPerformed(final GuiButton button) {
         if (button.id == 999) {
-            UtilClient.openWebLink(UtilReference.GITHUB + "/releases");
+            UtilClient.openWebLink(clientData.getModDownloadUrl());
         }
     }
 
@@ -36,7 +36,7 @@ public class VersionBlockGUI extends ClansGUI {
 
     @Override
     public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
-        this.drawDefaultBackground();
+        drawDefaultBackground();
 
         final String title = UtilReference.MODNAME + " cannot initialize!";
         fontRendererObj.drawStringWithShadow(
